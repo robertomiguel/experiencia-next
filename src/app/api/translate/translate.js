@@ -3,7 +3,7 @@ import FormData from 'form-data';
 
 export async function translate(q, k) {
     try {
-        const url = process.env.REACT_APP_TRANSLATE_URL;
+        const url = process.env.TRANSLATE_URL;
 
         const formData = new FormData();
         formData.append('q', q);
@@ -17,7 +17,7 @@ export async function translate(q, k) {
             headers: {
                 'accept': '*/*',
                 'content-type': `multipart/form-data; boundary=${formData._boundary}`,
-                'origin': process.env.REACT_APP_TRASLATE_ORIGIN,
+                'origin': process.env.TRASLATE_ORIGIN,
             }
         });
 

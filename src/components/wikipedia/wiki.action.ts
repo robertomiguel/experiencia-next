@@ -3,11 +3,11 @@ import prisma from "@/lib/prisma";
 import { WikiData, WikiDataList } from "@/types/wikipedia";
 import { redirect } from "next/navigation";
 
-const REACT_APP_WIKI_API_URL = process.env.REACT_APP_WIKI_API_URL
+const WIKI_API_URL = process.env.WIKI_API_URL
 
 const getWikiData = async (text: string) => {
     try {
-        const url = `${REACT_APP_WIKI_API_URL}?q=${text}&limit=${100}`
+        const url = `${WIKI_API_URL}?q=${text}&limit=${100}`
         const { pages } = await fetch(url).then(res => res.json())
         return (pages as WikiData[]).filter((item: WikiData) => item.thumbnail?.url)
     } catch (error) {

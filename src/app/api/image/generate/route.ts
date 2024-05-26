@@ -6,11 +6,11 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { ImageParams } from "@/types/image";
 
-const url = process.env.REACT_APP_IMAGE_API_URL;
-const key = process.env.REACT_APP_IMAGE_API_KEY;
-const auth = process.env.REACT_APP_IMAGE_API_AUTH || '';
-const apiRevalidKey = process.env.REACT_APP_REVALIDATION_KEY;
-const appUrl = process.env.REACT_APP_URL;
+const url = process.env.IMAGE_API_URL;
+const key = process.env.IMAGE_API_KEY;
+const auth = process.env.IMAGE_API_AUTH || '';
+const apiRevalidKey = process.env.REVALIDATION_KEY;
+const appUrl = process.env.BASE_URL;
 
 const generate = async (params: ImageParams) => {
 

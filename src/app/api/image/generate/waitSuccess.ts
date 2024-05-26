@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const key = process.env.REACT_APP_IMAGE_API_KEY;
-const apiUrl = process.env.REACT_APP_IMAGE_API_GET_URL;
-const auth = process.env.REACT_APP_IMAGE_API_AUTH || '';
+const key = process.env.IMAGE_API_KEY;
+const apiUrl = process.env.IMAGE_API_GET_URL;
+const auth = process.env.IMAGE_API_AUTH || '';
 
 export const waitSuccess = async (jobId: string) => {
 

@@ -1,7 +1,7 @@
 'use server'
 
 export const loginAction = async (formData: FormData) => {
-    const url = process.env.REACT_APP_URL + '/api/login'
+    const url = process.env.BASE_URL + '/api/login'
     const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
