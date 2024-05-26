@@ -1,0 +1,25 @@
+.container {
+    @apply flex flex-col bg-blue-600 rounded-2xl ml-2 mr-2 justify-center items-center w-full sm:max-w-2xl p-3;
+}
+
+.listContainer {
+    @apply flex flex-col sm:flex-row gap-2 sm:gap-0 sm:flex-wrap justify-center items-center mt-2;
+}
+
+.item {
+    @apply text-gray-50 text-nowrap w-fit before:hidden sm:before:inline-block;
+}
+
+.item::before {
+    content: '|';
+    margin: .5rem;
+}
+
+.item:first-child::before {
+    content: '';
+    margin: 0;
+}
+
+.gitHub {
+    @apply underline mt-4;
+}

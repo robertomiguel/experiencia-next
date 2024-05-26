@@ -1,0 +1,23 @@
+
+.link {
+    @apply w-full px-2 inline-flex space-x-2 items-center border-b;
+    @apply border-slate-700 py-1 transition ease-linear duration-150;
+    @apply rounded-xl;
+}
+
+.defaultColor {
+    @apply bg-blue-800
+}
+
+.selectedColor {
+    @apply bg-blue-600;
+}
+
+
+.text {
+    @apply text-lg font-bold leading-5 text-white;
+}
+
+.description {
+    @apply text-sm text-slate-300 hidden md:block;
+}

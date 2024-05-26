@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import './scroll.css';
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -16,9 +17,8 @@
   }
 }
  */
-
 body {
-  color: rgb(var(--foreground-rgb));
+  @apply bg-blue-950 text-gray-50;
   letter-spacing: .06em;
 }
 
@@ -26,4 +26,76 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+h1 {
+  display: inline-block;
+  font-size: 1.8rem;
+  letter-spacing: 0.08em;
+  margin: .5rem;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+  display: inline-block;
+  font-size: 1.55rem;
+  letter-spacing: 0.08em;
+  margin: .5rem;
+}
+
+h3 {
+  display: inline-block;
+  font-size: 1.3em;
+  letter-spacing: 0.08em;
+  margin: .5rem;
+}
+
+h4 {
+  display: inline-block;
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  margin: .5rem;
+  font-weight: 400;
+}
+
+h5 {
+  display: inline-block;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  margin: .5rem;
+}
+
+h6 {
+  display: inline-block;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  margin: .5rem;
+  font-weight: 400;
+}
+
+button {
+  @apply w-full bg-blue-800 text-white pl-3 pr-3 p-2 rounded-full;
+  @apply hover:bg-blue-600;
+  @apply flex items-center justify-center gap-2;
+}
+
+input {
+  @apply bg-gray-50 text-blue-950 pl-3 pr-3 p-2 rounded-full w-full;
+}
+
+select {
+  @apply bg-gray-50 text-blue-950 pl-3 pr-3 p-2 rounded-full w-full;
+}
+
+textarea {
+  @apply bg-gray-50 text-blue-950 pl-3 pr-3 p-2 rounded-md w-full;
+}
+
+input[type='checkbox'] {
+  @apply bg-gray-50 text-blue-950;
+}
+
+.horizontal-radio {
+  display: flex;
+  flex-direction: row;
 }

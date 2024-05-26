@@ -1,7 +1,0 @@
-.link {
-    @apply text-gray-50 hover:underline;
-}
-
-.currentLink {
-    @apply bg-blue-100 text-blue-950 pl-1 pr-1 rounded-md;
-}
