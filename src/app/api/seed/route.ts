@@ -3,9 +3,6 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
 
-    console.log('seed');
-
-
     try {
         const rolesDefault = [
             {
@@ -28,8 +25,6 @@ export async function GET(req: Request) {
             phoneNumber: '123456789',
             roleId: 'admin',
         }
-
-
 
         await prisma.$transaction([
             prisma.user.deleteMany(),

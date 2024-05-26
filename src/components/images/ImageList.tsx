@@ -17,6 +17,13 @@ export const ImageList = async ({ searchParams, hidden = false }: { searchParams
     }
 
     const count = await prisma.images.count({ where });
+    if (!count || count === 0) {
+        return (
+            <div className="m-auto w-full">
+                <h1 className="text-center text-2xl">No images found</h1>
+            </div>
+        )
+    }
     const totalPage = Math.ceil(count / 5)
     const pageParam = (isNaN(searchParams?.p) ? 1 : parseInt(searchParams?.p)) || 1
     const page = pageParam === 0 ? 1 : pageParam > totalPage ? totalPage : pageParam
