@@ -10,6 +10,7 @@ const publicRoutes = [
     '/login/register',
     '/api/login',
     '/api/login/register',
+    '/api/seed',
 ];
 
 const noAccessIfLogged = [
@@ -64,5 +65,6 @@ export async function middleware(request: NextRequest) {
     } else if (noAccess) {
         return NextResponse.json({ error: 'Not authorized' }, { status: 401 });
     }
+
     return NextResponse.next();
 }
