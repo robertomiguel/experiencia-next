@@ -1,6 +1,6 @@
 
 export const fetchKeyData = async () => {
-    const urlKey = process.env.TRANSLATE_GET_KET;
+    const urlKey = process.env.TRANSLATE_GET_KEY;
     if (!urlKey) {
         throw new Error('No URL key provided.');
     }

@@ -72,7 +72,7 @@ export const MakeImage = () => {
                     <div key={index} className="relative" >
                         <div className={style.imageBox} >
                             <A className={style.downloadButton} onClick={() => {
-                                window.location.href = (item.url + '?download=1')
+                                window.location.href = (item.url.replace('upload/', 'upload/fl_attachment:download'))
                             }} label={<FiDownload className="size-6" />} />
                             {!isProcessing &&
                                 <A className={style.rebuildButton} onClick={() => handleRebuild(index)} label={<FiRefreshCcw className="size-6" />} />
@@ -80,15 +80,16 @@ export const MakeImage = () => {
                             <A className={style.deleteButton} onClick={() => handleDelete(index)} label={<FiTrash className="size-6" />} />
                         </div>
                         <Image
+                            key={`img-${index}`}
+                            id={`img-${index}`}
                             src={item.url}
+                            loader={() => item.url}
                             alt='generated'
                             priority
                             width='0'
                             height='0'
                             sizes="100vw"
                             style={{ width: '512px', height: 'auto' }}
-                            placeholder="blur"
-                            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII="
                         />
                     </div>
                 ))}

@@ -35,6 +35,8 @@ model Jobs {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
+  secureUrl String?
+  url       String?
 }
 
 model ImageByUser {

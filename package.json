@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.13.0",
+    "@cloudinary/url-gen": "^1.19.0",
     "@prisma/client": "^5.14.0",
     "@reduxjs/toolkit": "^2.2.5",
     "axios": "^1.7.2",
+    "cloudinary": "^2.2.0",
     "form-data": "^4.0.0",
     "formik": "^2.4.6",
     "next": "14.2.3",
