@@ -12,7 +12,7 @@
 }
 
 .searchButton {
-    @apply w-fit hover:bg-blue-200 bg-transparent text-blue-900 absolute right-2 m-0 rounded-full p-3;
+    @apply w-fit hover:bg-blue-200 bg-gray-50 text-blue-900 absolute right-2 m-0 rounded-full p-3;
 }
 
 .buttonFilter {

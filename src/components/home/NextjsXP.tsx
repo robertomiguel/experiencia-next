@@ -27,7 +27,7 @@ export const NextjsXP = () => {
                     <div key={item} className={style.item} >{item}</div>
                 ))}
             </div>
-            <a className={style.gitHub} href="" >View code on GitHub</a>
+            <a className={style.gitHub} href="https://github.com/robertomiguel/experiencia-next" target='_blank' >View code on GitHub</a>
         </div>
     );
 }
