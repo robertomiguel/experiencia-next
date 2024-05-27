@@ -7,16 +7,16 @@ interface FormInputProps {
     disabled?: boolean
     placeholder?: string
     filterContent?: React.ReactNode
+    value: string
+    onChange: (t: string) => void
 }
 
-export const FormSearchInput = ({ onSubmit, defaultValue, disabled, placeholder, filterContent }: FormInputProps) => {
+export const FormSearchInput = ({ onSubmit, defaultValue, disabled, placeholder, filterContent, value, onChange }: FormInputProps) => {
 
     return <div className={style.formContainer}>
         <form onSubmit={e => {
             e.preventDefault()
-            const formData = new FormData(e.target as HTMLFormElement)
-            const text = formData.get('q') as string
-            onSubmit(text)
+            onSubmit(value)
         }} >
             <div className={style.formContent} >
                 <input
@@ -27,6 +27,8 @@ export const FormSearchInput = ({ onSubmit, defaultValue, disabled, placeholder,
                     defaultValue={defaultValue}
                     autoComplete="none"
                     placeholder={placeholder}
+                    value={value}
+                    onChange={e => onChange(e.target.value)}
                 />
                 <button disabled={disabled} type="submit" className={style.searchButton} >
                     <FiSearch />

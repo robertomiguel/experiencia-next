@@ -9,18 +9,31 @@ import style from './makeImage.module.css'
 import { Spinner } from "../common/Spinner";
 import { GenerateRes, ImageItem, ProcessRes } from "@/types/iaDraw";
 import { ImageActions } from "./ImageActions";
+import { translateAction } from "./translate.action";
 
 export const MakeImage = () => {
 
     const [list, setList] = useState<ImageItem[]>([])
     const [isProcessing, setIsProcessing] = useState<boolean>(false)
     const [indexZoom, setIndexZoom] = useState<number | null>(null)
+    const [useTranslate, setUseTranslate] = useState<boolean>(false)
+    const [valueText, setValueText] = useState<string>('')
+    const [isTranslating, setIsTranslating] = useState<boolean>(false)
 
     const handleGenerate = async (prompt: string) => {
-        setIsProcessing(true)
-        const res: GenerateRes = await GenerateAction({ prompt })
-        if (res.job) await handleProcess(res.job)
-        setIsProcessing(false)
+        let text = prompt
+        try {
+            if (useTranslate) {
+                text = await handleTranslate(prompt)
+            }
+            setIsProcessing(true)
+            const res: GenerateRes = await GenerateAction({ prompt: text })
+            if (res.job) await handleProcess(res.job)
+        } catch (error) {
+            console.log('error proccess', error);
+        } finally {
+            setIsProcessing(false)
+        }
     }
 
     const handleProcess = async (job: string) => {
@@ -61,15 +74,33 @@ export const MakeImage = () => {
         setIndexZoom(indexZoom === index ? null : index)
     }
 
+    const handleTranslate = async (text: string) => {
+        if (!text) return ''
+        setIsTranslating(true)
+        const res = await translateAction(text)
+        setValueText(res.translatedText)
+        setIsTranslating(false)
+        return res.translatedText
+    }
+
     return (
         <div>
             <FormSearchInput
                 onSubmit={handleGenerate}
                 disabled={isProcessing}
-                placeholder="Type a prompt to generate an image"
+                placeholder={useTranslate ? 'Describe la imagen en español' : 'Describe the image in english'}
+                value={valueText}
+                onChange={t => setValueText(t)}
             />
+            <div className="flex flex-row justify-center items-center gap-3" >
+                <div className="flex flex-row w-fit gap-2 justify-center items-center text-nowrap" >
+                    <input type="checkbox" checked={useTranslate} onChange={() => setUseTranslate(prev => !prev)} />
+                    Auto translate Esp-Eng
+                </div>
+            </div>
             <div className="m-auto" >
                 {isProcessing && <Spinner label="Processing..." />}
+                {isTranslating && <Spinner label="Translating..." />}
             </div>
             <div className={style.imageContainer} >
                 {list.map((item, index) => (
