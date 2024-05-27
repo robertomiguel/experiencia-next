@@ -1,0 +1,20 @@
+.formContainer {
+    @apply sticky top-10 z-20 bg-blue-950 bg-opacity-80 rounded-full ml-4 mr-4;
+}
+
+.formContent {
+    @apply flex flex-col w-full sm:w-1/2;
+    @apply sm:flex-row gap-3 m-auto p-2 relative;
+}
+
+.formInput {
+    @apply w-full;
+}
+
+.searchButton {
+    @apply w-fit hover:bg-blue-200 bg-transparent text-blue-900 absolute right-2 m-0 rounded-full p-3;
+}
+
+.buttonFilter {
+    @apply flex justify-center items-center hover:cursor-pointer;
+}

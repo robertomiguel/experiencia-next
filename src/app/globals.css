@@ -79,23 +79,38 @@ button {
   @apply flex items-center justify-center gap-2;
 }
 
+button:disabled {
+  @apply bg-gray-200 cursor-not-allowed;
+}
+
 input {
   @apply bg-gray-50 text-blue-950 pl-3 pr-3 p-2 rounded-full w-full;
+}
+
+input:disabled {
+  @apply bg-gray-200;
 }
 
 select {
   @apply bg-gray-50 text-blue-950 pl-3 pr-3 p-2 rounded-full w-full;
 }
 
+select:disabled {
+  @apply bg-gray-200;
+}
+
 textarea {
   @apply bg-gray-50 text-blue-950 pl-3 pr-3 p-2 rounded-md w-full;
+}
+
+textarea:disabled {
+  @apply bg-gray-200;
 }
 
 input[type='checkbox'] {
   @apply bg-gray-50 text-blue-950;
 }
 
-.horizontal-radio {
-  display: flex;
-  flex-direction: row;
+input[type='checkbox']:disabled {
+  @apply bg-gray-200;
 }

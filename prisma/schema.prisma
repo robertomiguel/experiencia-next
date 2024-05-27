@@ -25,6 +25,18 @@ model Images {
   ImageByUser ImageByUser[]
 }
 
+model Jobs {
+  job       String    @id @unique
+  prompt    String
+  seed      String
+  model     String
+  isReady   Boolean   @default(false)
+  params    Json
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
 model ImageByUser {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())

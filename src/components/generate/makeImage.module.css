@@ -1,0 +1,19 @@
+.imageContainer {
+    @apply flex flex-row flex-wrap gap-2 justify-center items-center w-full;
+}
+
+.imageBox {
+    @apply absolute top-0 bottom-0 left-0 right-0;
+}
+
+.downloadButton {
+    @apply absolute top-2 left-2 bg-blue-800 rounded-full p-2 bg-opacity-40;
+}
+
+.deleteButton {
+    @apply absolute bottom-2 right-2 bg-blue-800 rounded-full p-2 bg-opacity-40;
+}
+
+.rebuildButton {
+    @apply absolute top-2 right-2 bg-blue-800 rounded-full p-2 bg-opacity-40;
+}

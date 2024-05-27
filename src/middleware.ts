@@ -11,6 +11,7 @@ const publicRoutes = [
     '/api/login',
     '/api/login/register',
     '/api/seed',
+    '/iadraw',
 ];
 
 const noAccessIfLogged = [
