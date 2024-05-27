@@ -5,16 +5,16 @@ import { GenerateAction } from "./generate.action"
 import { GetImageAction } from "./getImage.action"
 import { FormSearchInput } from "../common/FormSearchInput";
 import Image from "next/image";
-import { A } from "../common/A";
-import { FiDownload, FiRefreshCcw, FiTrash } from "react-icons/fi";
 import style from './makeImage.module.css'
 import { Spinner } from "../common/Spinner";
 import { GenerateRes, ImageItem, ProcessRes } from "@/types/iaDraw";
+import { ImageActions } from "./ImageActions";
 
 export const MakeImage = () => {
 
     const [list, setList] = useState<ImageItem[]>([])
     const [isProcessing, setIsProcessing] = useState<boolean>(false)
+    const [indexZoom, setIndexZoom] = useState<number | null>(null)
 
     const handleGenerate = async (prompt: string) => {
         setIsProcessing(true)
@@ -57,6 +57,10 @@ export const MakeImage = () => {
         await handleGenerate(list[index].prompt)
     }
 
+    const handleZoom = (index: number) => {
+        setIndexZoom(indexZoom === index ? null : index)
+    }
+
     return (
         <div>
             <FormSearchInput
@@ -70,26 +74,26 @@ export const MakeImage = () => {
             <div className={style.imageContainer} >
                 {list.map((item, index) => (
                     <div key={index} className="relative" >
-                        <div className={style.imageBox} >
-                            <A className={style.downloadButton} onClick={() => {
-                                window.location.href = (item.url.replace('upload/', 'upload/fl_attachment:download'))
-                            }} label={<FiDownload className="size-6" />} />
-                            {!isProcessing &&
-                                <A className={style.rebuildButton} onClick={() => handleRebuild(index)} label={<FiRefreshCcw className="size-6" />} />
-                            }
-                            <A className={style.deleteButton} onClick={() => handleDelete(index)} label={<FiTrash className="size-6" />} />
-                        </div>
+                        <ImageActions
+                            index={index}
+                            url={item.url}
+                            isProcessing={isProcessing}
+                            onRebuild={handleRebuild}
+                            onDelete={handleDelete}
+                            onZoom={handleZoom}
+                            isZoom={indexZoom === index}
+                        />
                         <Image
                             key={`img-${index}`}
                             id={`img-${index}`}
                             src={item.url}
-                            loader={() => item.url}
+                            loader={() => item.url + '?width=512'}
                             alt='generated'
                             priority
                             width='0'
                             height='0'
                             sizes="100vw"
-                            style={{ width: '512px', height: 'auto' }}
+                            style={{ width: indexZoom === index ? '1024px' : '512px', height: 'auto' }}
                         />
                     </div>
                 ))}

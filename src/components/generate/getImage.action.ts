@@ -2,7 +2,6 @@
 import prisma from '@/lib/prisma';
 import axios from 'axios';
 import { ImageGetRequest, ProcessRes } from '@/types/iaDraw';
-import { Cloudinary } from '@cloudinary/url-gen'
 
 export const GetImageAction = async ({ job }: { job: string }) => {
 
