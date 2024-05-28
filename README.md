@@ -23,11 +23,6 @@ BASE_URL=
 ## wikipedia api
 WIKI_API_URL=
 
-## translate api
-TRANSLATE_GET_KEY=
-TRANSLATE_URL=
-TRASLATE_ORIGIN=
-
 ## IA Api
 IMAGE_API_KEY=
 IMAGE_API_URL=
