@@ -10,6 +10,8 @@ import { Spinner } from "../common/Spinner";
 import { GenerateRes, ImageItem, ProcessRes } from "@/types/iaDraw";
 import { ImageActions } from "./ImageActions";
 import { Metadata } from "next";
+import { SelectModel } from "./SelectModel";
+import { DeleteAction } from "./delete.action";
 
 export const metadata: Metadata = {
     title: "ID Images",
@@ -17,6 +19,12 @@ export const metadata: Metadata = {
     keywords: ['images', 'ia', 'generator', 'free', 'stable', 'diffusion']
 };
 
+const goTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'instant'
+    });
+}
 
 export const MakeImage = () => {
 
@@ -24,12 +32,15 @@ export const MakeImage = () => {
     const [isProcessing, setIsProcessing] = useState<boolean>(false)
     const [indexZoom, setIndexZoom] = useState<number | null>(null)
     const [valueText, setValueText] = useState<string>('')
+    const [model, setModel] = useState<number>(3)
+    const [isDeleting, setIsDeleting] = useState<boolean>(false)
+    const [showToUpButton, setShowToUpButton] = useState<boolean>(false)
 
     const handleGenerate = async (prompt: string) => {
         let text = prompt
         try {
             setIsProcessing(true)
-            const res: GenerateRes = await GenerateAction({ prompt: text })
+            const res: GenerateRes = await GenerateAction({ prompt: text, model })
             if (res.job) await handleProcess(res.job)
         } catch (error) {
             console.log('error proccess', error);
@@ -51,6 +62,7 @@ export const MakeImage = () => {
                 setList(newList)
                 localStorage.setItem('drawList', JSON.stringify(newList))
                 finished = true
+                goTop()
                 break
             }
         }
@@ -60,12 +72,34 @@ export const MakeImage = () => {
         const localList = localStorage.getItem('drawList')
         const initialList = localList ? JSON.parse(localList) : []
         setList(initialList)
+
+        const handleScroll = () => {
+            const top = window.scrollY;
+            setShowToUpButton(top > 1);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+
     }, [])
 
-    const handleDelete = (index: number) => {
-        const newList = list.filter((_, i) => i !== index)
-        setList(newList)
-        localStorage.setItem('drawList', JSON.stringify(newList))
+    const handleDelete = async (index: number) => {
+        if (!window.confirm('Are you sure you want to delete this image?')) return
+        setIsDeleting(true)
+        const url = list[index].url
+        const publicId = url.split('/').slice(-3).join('/').split('.')[0]
+        const res = await DeleteAction(publicId)
+        let confirm = true
+        if (!res) {
+            confirm = window.confirm('Error deleting image from server, delete from your local list?')
+        }
+        if (confirm) {
+            const newList = list.filter((_, i) => i !== index)
+            setList(newList)
+            localStorage.setItem('drawList', JSON.stringify(newList))
+        }
+        setIsDeleting(false)
     }
 
     const handleRebuild = async (index: number) => {
@@ -78,6 +112,10 @@ export const MakeImage = () => {
 
     return (
         <div>
+            {showToUpButton &&
+                <button
+                    onClick={goTop}
+                    className="fixed z-30 bottom-12 right-4 bg-blue-500 text-white rounded-full w-fit hover:bg-blue-600" >Up</button>}
             <FormSearchInput
                 onSubmit={handleGenerate}
                 disabled={isProcessing}
@@ -85,6 +123,7 @@ export const MakeImage = () => {
                 value={valueText}
                 onChange={t => setValueText(t)}
             />
+            <SelectModel onChange={v => setModel(v)} value={model} />
             <div className="m-auto" >
                 {isProcessing && <Spinner label="Processing..." />}
             </div>
@@ -95,6 +134,7 @@ export const MakeImage = () => {
                             index={index}
                             url={item.url}
                             isProcessing={isProcessing}
+                            isDeleting={isDeleting}
                             onRebuild={handleRebuild}
                             onDelete={handleDelete}
                             onZoom={handleZoom}

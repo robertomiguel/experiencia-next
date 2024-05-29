@@ -53,7 +53,6 @@ export async function middleware(request: NextRequest) {
             const exp = tokenData.expired as number;
             const time = tokenData.time as number;
             isLogin = current < (time + exp);
-            console.log('tokenData', isLogin, tokenData);
 
             if (isLogin) {
                 const newTimeInSeconds = Math.floor(Date.now() / 1000);

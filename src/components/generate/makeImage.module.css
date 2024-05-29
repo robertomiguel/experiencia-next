@@ -7,7 +7,7 @@
 }
 
 .downloadButton {
-    @apply absolute top-2 left-2 bg-blue-800 rounded-full p-2 bg-opacity-40;
+    @apply absolute top-2 right-2 bg-blue-800 rounded-full p-2 bg-opacity-40;
 }
 
 .deleteButton {
@@ -15,7 +15,7 @@
 }
 
 .rebuildButton {
-    @apply absolute top-2 right-2 bg-blue-800 rounded-full p-2 bg-opacity-40;
+    @apply absolute top-2 left-2 bg-blue-800 rounded-full p-2 bg-opacity-40;
 }
 
 .zoomButton {

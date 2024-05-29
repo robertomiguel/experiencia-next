@@ -10,9 +10,10 @@ interface Props {
     onDelete: (index: number) => void
     onZoom: (index: number) => void
     isZoom: boolean
+    isDeleting?: boolean
 }
 
-export const ImageActions = ({ index, url, isProcessing, onRebuild, onDelete, onZoom, isZoom }: Props) => {
+export const ImageActions = ({ index, url, isProcessing, onRebuild, onDelete, onZoom, isZoom, isDeleting }: Props) => {
 
     return (
         <div className={style.imageBox} >
@@ -34,7 +35,9 @@ export const ImageActions = ({ index, url, isProcessing, onRebuild, onDelete, on
                 }
             />
 
-            <A className={style.deleteButton} onClick={() => onDelete(index)} label={<FiTrash className="size-6" />} />
+            {!isDeleting &&
+                <A className={style.deleteButton} onClick={() => onDelete(index)} label={<FiTrash className="size-6" />} />
+            }
         </div>
     )
 }

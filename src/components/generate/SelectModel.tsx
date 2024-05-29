@@ -1,85 +1,149 @@
-
+import { useEffect, useState } from 'react'
 
 const MODEL_LIST = [
-    { "value": "3Guofeng3_v34.safetensors [50f420de]", "label": "3 Guofeng3 V3.4" },
-    { "value": "absolutereality_V16.safetensors [37db0fc3]", "label": "Absolute Reality V1.6" },
-    { "value": "absolutereality_v181.safetensors [3d9d4d2b]", "label": "Absolute Reality V1.8.1" },
-    { "value": "amIReal_V41.safetensors [0a8a2e61]", "label": "Am I Real V4.1" },
-    { "value": "analog-diffusion-1.0.ckpt [9ca13f02]", "label": "Analog V1" },
-    { "value": "anythingv3_0-pruned.ckpt [2700c435]", "label": "Anything V3" },
-    { "value": "anything-v4.5-pruned.ckpt [65745d25]", "label": "Anything V4.5" },
-    { "value": "anythingV5_PrtRE.safetensors [893e49b9]", "label": "Anything V5" },
-    { "value": "AOM3A3_orangemixs.safetensors [9600da17]", "label": "AbyssOrangeMix V3" },
-    { "value": "blazing_drive_v10g.safetensors [ca1c1eab]", "label": "Blazing Drive V10g" },
-    { "value": "breakdomain_I2428.safetensors [43cc7d2f]", "label": "BreakDomain I2428" },
-    { "value": "breakdomain_M2150.safetensors [15f7afca]", "label": "BreakDomain M2150" },
-    { "value": "cetusMix_Version35.safetensors [de2f2560]", "label": "CetusMix Version35" },
-    { "value": "childrensStories_v13D.safetensors [9dfaabcb]", "label": "Children's Stories V1 3D" },
-    { "value": "childrensStories_v1SemiReal.safetensors [a1c56dbb]", "label": "Children's Stories V1 SemiReal" },
-    { "value": "childrensStories_v1ToonAnime.safetensors [2ec7b88b]", "label": "Children's Stories V1 Toon-Anime" },
-    { "value": "Counterfeit_v30.safetensors [9e2a8f19]", "label": "Counterfeit V3.0" },
-    { "value": "cuteyukimixAdorable_midchapter3.safetensors [04bdffe6]", "label": "CuteYukimix MidChapter3" },
-    { "value": "cyberrealistic_v33.safetensors [82b0d085]", "label": "CyberRealistic V3.3" },
-    { "value": "dalcefo_v4.safetensors [425952fe]", "label": "Dalcefo V4" },
-    { "value": "deliberate_v2.safetensors [10ec4b29]", "label": "Deliberate V2" },
-    { "value": "deliberate_v3.safetensors [afd9d2d4]", "label": "Deliberate V3" },
-    { "value": "dreamlike-anime-1.0.safetensors [4520e090]", "label": "Dreamlike Anime V1" },
-    { "value": "dreamlike-diffusion-1.0.safetensors [5c9fd6e0]", "label": "Dreamlike Diffusion V1" },
-    { "value": "dreamlike-photoreal-2.0.safetensors [fdcf65e7]", "label": "Dreamlike Photoreal V2" },
-    { "value": "dreamshaper_6BakedVae.safetensors [114c8abb]", "label": "Dreamshaper 6 baked vae" },
-    { "value": "dreamshaper_7.safetensors [5cf5ae06]", "label": "Dreamshaper 7" },
-    { "value": "dreamshaper_8.safetensors [9d40847d]", "label": "Dreamshaper 8" },
-    { "value": "edgeOfRealism_eorV20.safetensors [3ed5de15]", "label": "Edge of Realism EOR V2.0" },
-    { "value": "EimisAnimeDiffusion_V1.ckpt [4f828a15]", "label": "Eimis Anime Diffusion V1.0" },
-    { "value": "elldreths-vivid-mix.safetensors [342d9d26]", "label": "Elldreth's Vivid" },
-    { "value": "epicphotogasm_xPlusPlus.safetensors [1a8f6d35]", "label": "epiCPhotoGasm X Plus Plus" },
-    { "value": "epicrealism_naturalSinRC1VAE.safetensors [90a4c676]", "label": "EpiCRealism Natural Sin RC1" },
-    { "value": "epicrealism_pureEvolutionV3.safetensors [42c8440c]", "label": "EpiCRealism Pure Evolution V3" },
-    { "value": "ICantBelieveItsNotPhotography_seco.safetensors [4e7a3dfd]", "label": "I Cant Believe Its Not Photography Seco" },
-    { "value": "indigoFurryMix_v75Hybrid.safetensors [91208cbb]", "label": "Indigo Furry Mix V7.5 Hybrid" },
-    { "value": "juggernaut_aftermath.safetensors [5e20c455]", "label": "Juggernaut Aftermath" },
-    { "value": "lofi_v4.safetensors [ccc204d6]", "label": "Lofi V4" },
-    { "value": "lyriel_v16.safetensors [68fceea2]", "label": "Lyriel V1.6" },
-    { "value": "majicmixRealistic_v4.safetensors [29d0de58]", "label": "MajicMix Realistic V4" },
-    { "value": "mechamix_v10.safetensors [ee685731]", "label": "MechaMix V1.0" },
-    { "value": "meinamix_meinaV9.safetensors [2ec66ab0]", "label": "MeinaMix Meina V9" },
-    { "value": "meinamix_meinaV11.safetensors [b56ce717]", "label": "MeinaMix Meina V11" },
-    { "value": "neverendingDream_v122.safetensors [f964ceeb]", "label": "Neverending Dream V1.22" },
-    { "value": "openjourney_V4.ckpt [ca2f377f]", "label": "Openjourney V4" },
-    { "value": "pastelMixStylizedAnime_pruned_fp16.safetensors [793a26e8]", "label": "Pastel-Mix" },
-    { "value": "portraitplus_V1.0.safetensors [1400e684]", "label": "Portrait+ V1" },
-    { "value": "protogenx34.safetensors [5896f8d5]", "label": "Protogen x3.4" },
-    { "value": "Realistic_Vision_V1.4-pruned-fp16.safetensors [8d21810b]", "label": "Realistic Vision V1.4" },
-    { "value": "Realistic_Vision_V2.0.safetensors [79587710]", "label": "Realistic Vision V2.0" },
-    { "value": "Realistic_Vision_V4.0.safetensors [29a7afaa]", "label": "Realistic Vision V4.0" },
-    { "value": "Realistic_Vision_V5.0.safetensors [614d1063]", "label": "Realistic Vision V5.0" },
-    { "value": "Realistic_Vision_V5.1.safetensors [a0f13c83]", "label": "Realistic Vision V5.1" },
-    { "value": "redshift_diffusion-V10.safetensors [1400e684]", "label": "Redshift Diffusion V1.0" },
-    { "value": "revAnimated_v122.safetensors [3f4fefd9]", "label": "ReV Animated V1.2.2" },
-    { "value": "rundiffusionFX25D_v10.safetensors [cd12b0ee]", "label": "RunDiffusion FX 2.5D V1.0" },
-    { "value": "rundiffusionFX_v10.safetensors [cd4e694d]", "label": "RunDiffusion FX Photorealistic V1.0" },
-    { "value": "sdv1_4.ckpt [7460a6fa]", "label": "SD V1.4" },
-    { "value": "v1-5-pruned-emaonly.safetensors [d7049739]", "label": "SD V1.5" },
-    { "value": "v1-5-inpainting.safetensors [21c7ab71]", "label": "SD V1.5 Inpainting" },
-    { "value": "shoninsBeautiful_v10.safetensors [25d8c546]", "label": "Shonin's Beautiful People V1.0" },
-    { "value": "theallys-mix-ii-churned.safetensors [5d9225a4]", "label": "TheAlly's Mix II" },
-    { "value": "timeless-1.0.ckpt [7c4971d4]", "label": "Timeless V1" },
-    { "value": "toonyou_beta6.safetensors [980f6b15]", "label": "ToonYou Beta 6" }
+    { value: 1, label: "3Guofeng3_v34" },
+    { value: 2, label: "absolutereality_V16" },
+    { value: 3, label: "absolutereality_v181" },
+    { value: 4, label: "amIReal_V41" },
+    { value: 5, label: "analog-diffusion-1.0" },
+    { value: 6, label: "anythingv3_0-pruned" },
+    { value: 7, label: "anything-v4.5-pruned" },
+    { value: 8, label: "anythingV5_PrtRE" },
+    { value: 9, label: "AOM3A3_orangemixs" },
+    { value: 10, label: "blazing_drive_v10g" },
+    { value: 11, label: "breakdomain_I2428" },
+    { value: 12, label: "breakdomain_M2150" },
+    { value: 13, label: "cetusMix_Version35" },
+    { value: 14, label: "childrensStories_v13D" },
+    { value: 15, label: "childrensStories_v1SemiReal" },
+    { value: 16, label: "childrensStories_v1ToonAnime" },
+    { value: 17, label: "Counterfeit_v30" },
+    { value: 18, label: "cuteyukimixAdorable_midchapter3" },
+    { value: 19, label: "cyberrealistic_v33" },
+    { value: 20, label: "dalcefo_v4" },
+    { value: 21, label: "deliberate_v2" },
+    { value: 22, label: "deliberate_v3" },
+    { value: 23, label: "dreamlike-anime-1.0" },
+    { value: 24, label: "dreamlike-diffusion-1.0" },
+    { value: 25, label: "dreamlike-photoreal-2.0" },
+    { value: 26, label: "dreamshaper_6BakedVae" },
+    { value: 27, label: "dreamshaper_7" },
+    { value: 28, label: "dreamshaper_8" },
+    { value: 29, label: "edgeOfRealism_eorV20" },
+    { value: 30, label: "EimisAnimeDiffusion_V1" },
+    { value: 31, label: "elldreths-vivid-mix" },
+    { value: 32, label: "epicphotogasm_xPlusPlus" },
+    { value: 33, label: "epicrealism_naturalSinRC1VAE" },
+    { value: 34, label: "epicrealism_pureEvolutionV3" },
+    { value: 35, label: "ICantBelieveItsNotPhotography_seco" },
+    { value: 36, label: "indigoFurryMix_v75Hybrid" },
+    { value: 37, label: "juggernaut_aftermath" },
+    { value: 38, label: "lofi_v4" },
+    { value: 39, label: "lyriel_v16" },
+    { value: 40, label: "majicmixRealistic_v4" },
+    { value: 41, label: "mechamix_v10" },
+    { value: 42, label: "meinamix_meinaV9" },
+    { value: 43, label: "meinamix_meinaV11" },
+    { value: 44, label: "neverendingDream_v122" },
+    { value: 45, label: "openjourney_V4" },
+    { value: 46, label: "pastelMixStylizedAnime_pruned_fp16" },
+    { value: 47, label: "portraitplus_V1.0" },
+    { value: 48, label: "protogenx34" },
+    { value: 49, label: "Realistic_Vision_V1.4-pruned-fp16" },
+    { value: 50, label: "Realistic_Vision_V2.0" },
+    { value: 51, label: "Realistic_Vision_V4.0" },
+    { value: 52, label: "Realistic_Vision_V5.0" },
+    { value: 53, label: "Realistic_Vision_V5.1" },
+    { value: 54, label: "redshift_diffusion-V10" },
+    { value: 55, label: "revAnimated_v122" },
+    { value: 56, label: "rundiffusionFX25D_v10" },
+    { value: 57, label: "rundiffusionFX_v10" },
+    { value: 58, label: "sdv1_4" },
+    { value: 59, label: "v1-5-pruned-emaonly" },
+    { value: 60, label: "v1-5-inpainting" },
+    { value: 61, label: "shoninsBeautiful_v10" },
+    { value: 62, label: "theallys-mix-ii-churned" },
+    { value: 63, label: "timeless-1.0" },
+    { value: 64, label: "toonyou_beta6" },
 ]
 
-interface Props {
-    onChange: () => void
-    value: string
+interface OptionProps {
+    value: number;
+    label: string;
+    onClick: (value: number) => void;
 }
 
-export const SelectModel = ({ onChange, value }: Props) => {
+interface SelectProps {
+    children: React.ReactNode;
+    isOpen: boolean;
+}
+
+interface Props {
+    onChange: (v: number) => void;
+    value?: number;
+}
+
+const Option: React.FC<OptionProps> = ({ value, label, onClick }) => {
     return (
-        <div>
-            <select>
-                {MODEL_LIST.map((model) => (
-                    <option key={model.value} value={model.value} selected={model.value === value} onChange={onChange}>{model.label}</option>
-                ))}
-            </select>
+        <div
+            className='text-blue-950 h-6 w-full hover:cursor-pointer hover:bg-blue-400 hover:text-white pl-2 pr-2'
+            id={`opt-${value}`}
+            onClick={() => onClick(value)}
+        >
+            {label}
         </div>
-    )
+    );
+}
+
+const Select: React.FC<SelectProps> = ({ children, isOpen }) => {
+    if (!isOpen) return null;
+    return (
+        <div className='max-h-dvh absolute z-10 overflow-hidden overflow-y-scroll w-full p-2 bg-white'>
+            {children}
+        </div>
+    );
+}
+
+export const SelectModel: React.FC<Props> = ({ onChange, value = 3 }) => {
+    const [search, setSearch] = useState('');
+    const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+        setSearch(MODEL_LIST.find(m => m.value === value)?.label || '');
+    }, [value]);
+
+    return (
+        <div className='relative w-full sm:w-1/2 m-auto mb-3 '>
+            <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onFocus={() => setIsOpen(true)}
+                onBlur={() => setTimeout(() => setIsOpen(false), 100)}
+            />
+            {Boolean(search.length) && <button
+                type="button"
+                className='w-fit max-w-3 max-h-3  bg-gray-50 text-blue-900 absolute top-2 right-2 m-0 rounded-full p-3'
+                onClick={() => {
+                    setSearch('');
+                }}
+            >
+                X
+            </button>}
+            <Select isOpen={isOpen}>
+                {MODEL_LIST.filter(model => model.label.toLowerCase().includes(search.toLowerCase())).map((model) => (
+                    <Option
+                        key={model.value}
+                        value={model.value}
+                        label={model.label}
+                        onClick={(value) => {
+                            onChange(value);
+                            setSearch(MODEL_LIST.find(m => m.value === value)?.label || '');
+                            setIsOpen(false);
+                        }}
+                    />
+                ))}
+            </Select>
+        </div>
+    );
 }
