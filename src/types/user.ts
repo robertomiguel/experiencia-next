@@ -16,3 +16,10 @@ export interface User {
     updatedAt: Date
 }
 
+export interface UserLogin {
+    firstName: string
+    lastName: string
+    userName: string
+    phoneNumber: string
+    role: string
+}

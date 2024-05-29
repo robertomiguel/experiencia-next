@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { decode } from 'next-auth/jwt';
+import { decode, encode } from 'next-auth/jwt';
 
 // definiciones de rutas publicas
 const publicRoutes = [
@@ -38,16 +38,40 @@ export async function middleware(request: NextRequest) {
 
     let isLogin = false;
 
-    // solo de ejemplo - se usa token para auotentificar peticiones
+    // temporal, token en cookie, luego en header/session
     const token = request.cookies.get('auth')?.value;
-
 
     try {
         const tokenData = await decode({
             token,
             secret: JWT_SECRET
         });
-        isLogin = tokenData?.password === process.env.PASSWORD;
+        // validar el exp del troken es valido
+        if (tokenData?.exp) {
+
+            const current = Math.floor(Date.now() / 1000);
+            const exp = tokenData.expired as number;
+            const time = tokenData.time as number;
+            isLogin = current < (time + exp);
+            console.log('tokenData', isLogin, tokenData);
+
+            if (isLogin) {
+                const newTimeInSeconds = Math.floor(Date.now() / 1000);
+                const newToken = await encode({
+                    token: {
+                        id: tokenData.id,
+                        role: tokenData.role,
+                        time: newTimeInSeconds,
+                        expired: 60 * 60 * 60
+                    },
+                    secret: JWT_SECRET
+                });
+
+
+                const response = NextResponse.next();
+                response.cookies.set('auth', newToken, { httpOnly: true, sameSite: "lax" }); // Configura las opciones de cookies como necesites
+            }
+        }
     } catch {
         isLogin = false;
     }

@@ -9,6 +9,14 @@ import style from './makeImage.module.css'
 import { Spinner } from "../common/Spinner";
 import { GenerateRes, ImageItem, ProcessRes } from "@/types/iaDraw";
 import { ImageActions } from "./ImageActions";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "ID Images",
+    description: "ID inteligencia digital",
+    keywords: ['images', 'ia', 'generator', 'free', 'stable', 'diffusion']
+};
+
 
 export const MakeImage = () => {
 
