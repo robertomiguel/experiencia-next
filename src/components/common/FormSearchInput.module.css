@@ -1,20 +1,24 @@
 .formContainer {
-    @apply sticky top-10 z-20 bg-blue-950 bg-opacity-80 rounded-full ml-4 mr-4;
+    @apply sticky top-10 z-20 bg-blue-950 bg-opacity-80 rounded-full p-1;
+    @apply flex flex-row w-full justify-center items-center gap-1 sm:w-1/2 m-auto;
 }
 
-.formContent {
-    @apply flex flex-col w-full sm:w-1/2;
-    @apply sm:flex-row gap-3 m-auto p-2 relative;
-}
-
-.formInput {
+.form {
     @apply w-full;
 }
 
+.formContent {
+    @apply w-full relative;
+}
+
+.formInput {
+    @apply w-full relative;
+}
+
 .searchButton {
-    @apply w-fit hover:bg-blue-200 bg-gray-50 text-blue-900 absolute right-2 m-0 rounded-full p-3;
+    @apply w-fit hover:bg-blue-200 bg-gray-50 text-blue-900 absolute right-1 m-0 rounded-full p-2 top-1;
 }
 
 .buttonFilter {
-    @apply flex justify-center items-center hover:cursor-pointer;
+    @apply flex justify-center items-center hover:cursor-pointer w-fit bg-blue-950 p-2 rounded-full;
 }

@@ -1,5 +1,8 @@
+'use client'
 import { FiFilter, FiSearch } from 'react-icons/fi'
 import style from './FormSearchInput.module.css'
+import { useState } from 'react'
+import { Drawer } from './Drawer'
 
 interface FormInputProps {
     onSubmit: (text: string) => void
@@ -7,17 +10,31 @@ interface FormInputProps {
     disabled?: boolean
     placeholder?: string
     filterContent?: React.ReactNode
+    filterTitle?: string
     value: string
     onChange: (t: string) => void
 }
 
-export const FormSearchInput = ({ onSubmit, defaultValue, disabled, placeholder, filterContent, value, onChange }: FormInputProps) => {
+export const FormSearchInput = ({
+    onSubmit,
+    defaultValue,
+    disabled,
+    placeholder,
+    filterContent,
+    filterTitle,
+    value,
+    onChange
+}: FormInputProps) => {
+
+    const [isOpen, setIsOpen] = useState<boolean>(false)
 
     return <div className={style.formContainer}>
-        <form onSubmit={e => {
-            e.preventDefault()
-            onSubmit(value)
-        }} >
+        <form
+            className={style.form}
+            onSubmit={e => {
+                e.preventDefault()
+                onSubmit(value)
+            }} >
             <div className={style.formContent} >
                 <input
                     disabled={disabled}
@@ -33,8 +50,9 @@ export const FormSearchInput = ({ onSubmit, defaultValue, disabled, placeholder,
                 <button disabled={disabled} type="submit" className={style.searchButton} >
                     <FiSearch />
                 </button>
-                {filterContent && <div className={style.buttonFilter} ><FiFilter className='size-5' /></div>}
             </div>
         </form>
+        {filterContent && <div onClick={() => setIsOpen(true)} className={style.buttonFilter} ><FiFilter className='size-5' /></div>}
+        {isOpen && <Drawer title={filterTitle} onClose={() => setIsOpen(false)}>{filterContent}</Drawer>}
     </div>
 }

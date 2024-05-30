@@ -4,8 +4,8 @@
 }
 
 .option {
-    @apply text-blue-950 h-6 w-full hover:cursor-pointer hover:bg-blue-400 hover:text-white pl-2 pr-2;
-    @apply rounded-full;
+    @apply text-blue-950 w-full hover:cursor-pointer hover:bg-blue-200 p-2;
+    @apply rounded-md;
 }
 
 .optionSelected {
@@ -13,5 +13,5 @@
 }
 
 .resetButton {
-    @apply w-fit top-0 hover:bg-blue-200 bg-gray-50 text-blue-900 absolute right-0 m-0 rounded-full p-3;
+    @apply w-fit bottom-0 hover:bg-blue-200 bg-gray-50 text-blue-900 absolute right-0 m-0 rounded-full p-3;
 }

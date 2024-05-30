@@ -122,8 +122,9 @@ export const MakeImage = () => {
                 placeholder='Describe the image in english...'
                 value={valueText}
                 onChange={t => setValueText(t)}
+                filterContent={<SelectModel onChange={v => setModel(v)} value={model} />}
+                filterTitle='Settings'
             />
-            <SelectModel onChange={v => setModel(v)} value={model} />
             <div className="m-auto" >
                 {isProcessing && <Spinner label="Processing..." />}
             </div>

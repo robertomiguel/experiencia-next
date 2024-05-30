@@ -124,8 +124,13 @@ export const SelectModel = ({ onChange, value = 3 }: Props) => {
 
     const getLabelByValue = (value: number) => MODEL_LIST.find(m => m.value === value)?.label || '';
 
+    const removeAccent = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+
+    const filteredList = MODEL_LIST.filter(f => removeAccent(`${f.label}`).includes(removeAccent(search)));
+
     return (
-        <div className='relative w-full sm:w-1/2 m-auto mb-3 '>
+        <div className='relative w-full m-auto mb-3 '>
+            <h4>Model</h4>
             <input
                 type="text"
                 value={isOpen ? search : getLabelByValue(value)}
@@ -149,7 +154,7 @@ export const SelectModel = ({ onChange, value = 3 }: Props) => {
             </button>
             }
             {isOpen && <Select>
-                {MODEL_LIST.filter(model => model.label.toLowerCase().includes(search.toLowerCase())).map((model) => (
+                {filteredList.map((model) => (
                     <Option
                         key={model.value}
                         isSelected={model.value === value}
