@@ -130,7 +130,6 @@ export const SelectModel = ({ onChange, value = 3 }: Props) => {
 
     return (
         <div className='relative w-full m-auto mb-3 '>
-            <h4>Model</h4>
             <input
                 type="text"
                 value={isOpen ? search : getLabelByValue(value)}

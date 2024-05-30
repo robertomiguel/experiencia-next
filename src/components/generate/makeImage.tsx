@@ -10,8 +10,10 @@ import { Spinner } from "../common/Spinner";
 import { GenerateRes, ImageItem, ProcessRes } from "@/types/iaDraw";
 import { ImageActions } from "./ImageActions";
 import { Metadata } from "next";
-import { SelectModel } from "./SelectModel";
 import { DeleteAction } from "./delete.action";
+import { SettingsForm } from "./SettingsForm";
+import { useAppDispatch } from "@/store";
+import { toogleSidesheet } from "@/store/settingsSlice";
 
 export const metadata: Metadata = {
     title: "ID Images",
@@ -36,11 +38,16 @@ export const MakeImage = () => {
     const [isDeleting, setIsDeleting] = useState<boolean>(false)
     const [showToUpButton, setShowToUpButton] = useState<boolean>(false)
 
-    const handleGenerate = async (prompt: string) => {
+    const dispatch = useAppDispatch()
+
+    const handleGenerate = async (prompt: string, modelId?: number) => {
+        setModel(modelId || model)
+        setValueText(prompt)
+        dispatch(toogleSidesheet(false))
         let text = prompt
         try {
             setIsProcessing(true)
-            const res: GenerateRes = await GenerateAction({ prompt: text, model })
+            const res: GenerateRes = await GenerateAction({ prompt: text, model: modelId || model })
             if (res.job) await handleProcess(res.job)
         } catch (error) {
             console.log('error proccess', error);
@@ -122,7 +129,9 @@ export const MakeImage = () => {
                 placeholder='Describe the image in english...'
                 value={valueText}
                 onChange={t => setValueText(t)}
-                filterContent={<SelectModel onChange={v => setModel(v)} value={model} />}
+                filterContent={
+                    <SettingsForm generate={handleGenerate} prompt={valueText} model={model} />
+                }
                 filterTitle='Settings'
             />
             <div className="m-auto" >
