@@ -150,6 +150,7 @@ export const MakeImage = () => {
                             width='0'
                             height='0'
                             sizes="100vw"
+                            className="rounded-lg"
                             style={{ width: indexZoom === index ? '1024px' : '512px', height: 'auto' }}
                         />
                     </div>

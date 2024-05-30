@@ -1,81 +1,84 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import style from './selectModel.module.css'
+import { FiRefreshCcw } from 'react-icons/fi';
 
 const MODEL_LIST = [
-    { value: 1, label: "3Guofeng3_v34" },
-    { value: 2, label: "absolutereality_V16" },
-    { value: 3, label: "absolutereality_v181" },
-    { value: 4, label: "amIReal_V41" },
-    { value: 5, label: "analog-diffusion-1.0" },
-    { value: 6, label: "anythingv3_0-pruned" },
-    { value: 7, label: "anything-v4.5-pruned" },
-    { value: 8, label: "anythingV5_PrtRE" },
-    { value: 9, label: "AOM3A3_orangemixs" },
-    { value: 10, label: "blazing_drive_v10g" },
-    { value: 11, label: "breakdomain_I2428" },
-    { value: 12, label: "breakdomain_M2150" },
-    { value: 13, label: "cetusMix_Version35" },
-    { value: 14, label: "childrensStories_v13D" },
-    { value: 15, label: "childrensStories_v1SemiReal" },
-    { value: 16, label: "childrensStories_v1ToonAnime" },
-    { value: 17, label: "Counterfeit_v30" },
-    { value: 18, label: "cuteyukimixAdorable_midchapter3" },
-    { value: 19, label: "cyberrealistic_v33" },
-    { value: 20, label: "dalcefo_v4" },
-    { value: 21, label: "deliberate_v2" },
-    { value: 22, label: "deliberate_v3" },
-    { value: 23, label: "dreamlike-anime-1.0" },
-    { value: 24, label: "dreamlike-diffusion-1.0" },
-    { value: 25, label: "dreamlike-photoreal-2.0" },
-    { value: 26, label: "dreamshaper_6BakedVae" },
-    { value: 27, label: "dreamshaper_7" },
-    { value: 28, label: "dreamshaper_8" },
-    { value: 29, label: "edgeOfRealism_eorV20" },
-    { value: 30, label: "EimisAnimeDiffusion_V1" },
-    { value: 31, label: "elldreths-vivid-mix" },
-    { value: 32, label: "epicphotogasm_xPlusPlus" },
-    { value: 33, label: "epicrealism_naturalSinRC1VAE" },
-    { value: 34, label: "epicrealism_pureEvolutionV3" },
-    { value: 35, label: "ICantBelieveItsNotPhotography_seco" },
-    { value: 36, label: "indigoFurryMix_v75Hybrid" },
-    { value: 37, label: "juggernaut_aftermath" },
-    { value: 38, label: "lofi_v4" },
-    { value: 39, label: "lyriel_v16" },
-    { value: 40, label: "majicmixRealistic_v4" },
-    { value: 41, label: "mechamix_v10" },
-    { value: 42, label: "meinamix_meinaV9" },
-    { value: 43, label: "meinamix_meinaV11" },
-    { value: 44, label: "neverendingDream_v122" },
-    { value: 45, label: "openjourney_V4" },
-    { value: 46, label: "pastelMixStylizedAnime_pruned_fp16" },
-    { value: 47, label: "portraitplus_V1.0" },
-    { value: 48, label: "protogenx34" },
-    { value: 49, label: "Realistic_Vision_V1.4-pruned-fp16" },
-    { value: 50, label: "Realistic_Vision_V2.0" },
-    { value: 51, label: "Realistic_Vision_V4.0" },
-    { value: 52, label: "Realistic_Vision_V5.0" },
-    { value: 53, label: "Realistic_Vision_V5.1" },
-    { value: 54, label: "redshift_diffusion-V10" },
-    { value: 55, label: "revAnimated_v122" },
-    { value: 56, label: "rundiffusionFX25D_v10" },
-    { value: 57, label: "rundiffusionFX_v10" },
-    { value: 58, label: "sdv1_4" },
-    { value: 59, label: "v1-5-pruned-emaonly" },
-    { value: 60, label: "v1-5-inpainting" },
-    { value: 61, label: "shoninsBeautiful_v10" },
-    { value: 62, label: "theallys-mix-ii-churned" },
-    { value: 63, label: "timeless-1.0" },
-    { value: 64, label: "toonyou_beta6" },
-]
+    { value: 1, label: "Viento antiguo" },
+    { value: 2, label: "Realidad absoluta 1" },
+    { value: 3, label: "Realidad absoluta 2" },
+    { value: 4, label: "¿Soy real?" },
+    { value: 5, label: "Difusión analógica" },
+    { value: 6, label: "Cualquier cosa 1" },
+    { value: 7, label: "Cualquier cosa 2" },
+    { value: 8, label: "Cualquier cosa 3" },
+    { value: 9, label: "AOM mezcla naranja" },
+    { value: 10, label: "Conducción ardiente" },
+    { value: 11, label: "Romper dominio 1" },
+    { value: 12, label: "Romper dominio 2" },
+    { value: 13, label: "Mezcla de Cetus Versión" },
+    { value: 14, label: "Cuentos infantiles 1" },
+    { value: 15, label: "Cuentos infantiles 2 Semirreal" },
+    { value: 16, label: "Cuentos infantiles 3 ToonAnime" },
+    { value: 17, label: "Falsificación" },
+    { value: 18, label: "Mezcla Linda Yuki Adorable medio capítulo 3" },
+    { value: 19, label: "Ciberrealismo" },
+    { value: 20, label: "Dalcefo" },
+    { value: 21, label: "Deliberado 1" },
+    { value: 22, label: "Deliberado 2" },
+    { value: 23, label: "Anime de ensueño" },
+    { value: 24, label: "Difusión onírica 1" },
+    { value: 25, label: "Fotoreal onírico 2" },
+    { value: 26, label: "Moldeador de Sueños 1 VAE Cocido" },
+    { value: 27, label: "Moldeador de Sueños 2" },
+    { value: 28, label: "Moldeador de Sueños 3" },
+    { value: 29, label: "Borde del realismo Eor" },
+    { value: 30, label: "Difusión anime de Eimis" },
+    { value: 31, label: "Mezcla vívida de elldreth" },
+    { value: 32, label: "Epico fotogasmico XP++" },
+    { value: 33, label: "Realismo épico Natural" },
+    { value: 34, label: "Realismo épico Evolución pura" },
+    { value: 35, label: "No puedo creer que no sea fotografía Seco" },
+    { value: 36, label: "Mezcla peluda de indigo Híbrido" },
+    { value: 37, label: "Juggernaut Después del desastre" },
+    { value: 38, label: "Lofi" },
+    { value: 39, label: "Lyriel" },
+    { value: 40, label: "Mezcla mágica realista" },
+    { value: 41, label: "Mezcla de Mecha" },
+    { value: 42, label: "Meinamix Meina 1" },
+    { value: 43, label: "Meinamix Meina 2" },
+    { value: 44, label: "Sueño interminable" },
+    { value: 45, label: "Viaje abierto" },
+    { value: 46, label: "Mezcla de pastel anime estilizada podada" },
+    { value: 47, label: "Retrato plus" },
+    { value: 48, label: "Protogen" },
+    { value: 49, label: "Visión realista 1" },
+    { value: 50, label: "Visión realista 2" },
+    { value: 51, label: "Visión realista 3" },
+    { value: 52, label: "Visión realista 4" },
+    { value: 53, label: "Visión realista 5" },
+    { value: 54, label: "Difusión de cambio de color" },
+    { value: 55, label: "Rev animado" },
+    { value: 56, label: "Run Diffusion FX 1" },
+    { value: 57, label: "Run Diffusion FX 2" },
+    { value: 58, label: "SDV" },
+    { value: 59, label: "Ema Solo" },
+    { value: 60, label: "El enmascarado" },
+    { value: 61, label: "Shonins hermosa" },
+    { value: 62, label: "La mezcla de los aliados II" },
+    { value: 63, label: "Atemporal" },
+    { value: 64, label: "Tú beta" },
+];
+
 
 interface OptionProps {
     value: number;
     label: string;
     onClick: (value: number) => void;
+    isSelected?: boolean;
 }
 
 interface SelectProps {
     children: React.ReactNode;
-    isOpen: boolean;
 }
 
 interface Props {
@@ -83,11 +86,19 @@ interface Props {
     value?: number;
 }
 
-const Option: React.FC<OptionProps> = ({ value, label, onClick }) => {
+const Option = ({ value, label, onClick, isSelected }: OptionProps) => {
+    const optionRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (isSelected && optionRef.current) {
+            optionRef.current.scrollIntoView({ behavior: "instant", block: "nearest", inline: "nearest" });
+        }
+    }, [isSelected]);
+
     return (
         <div
-            className='text-blue-950 h-6 w-full hover:cursor-pointer hover:bg-blue-400 hover:text-white pl-2 pr-2'
-            id={`opt-${value}`}
+            ref={optionRef}
+            className={style.option + (isSelected ? ' ' + style.optionSelected : '')}
             onClick={() => onClick(value)}
         >
             {label}
@@ -95,16 +106,15 @@ const Option: React.FC<OptionProps> = ({ value, label, onClick }) => {
     );
 }
 
-const Select: React.FC<SelectProps> = ({ children, isOpen }) => {
-    if (!isOpen) return null;
+const Select = ({ children }: SelectProps) => {
     return (
-        <div className='max-h-dvh absolute z-10 overflow-hidden overflow-y-scroll w-full p-2 bg-white'>
+        <div className={style.select}>
             {children}
         </div>
     );
 }
 
-export const SelectModel: React.FC<Props> = ({ onChange, value = 3 }) => {
+export const SelectModel = ({ onChange, value = 3 }: Props) => {
     const [search, setSearch] = useState('');
     const [isOpen, setIsOpen] = useState(false);
 
@@ -112,38 +122,47 @@ export const SelectModel: React.FC<Props> = ({ onChange, value = 3 }) => {
         setSearch(MODEL_LIST.find(m => m.value === value)?.label || '');
     }, [value]);
 
+    const getLabelByValue = (value: number) => MODEL_LIST.find(m => m.value === value)?.label || '';
+
     return (
         <div className='relative w-full sm:w-1/2 m-auto mb-3 '>
             <input
                 type="text"
-                value={search}
+                value={isOpen ? search : getLabelByValue(value)}
                 onChange={(e) => setSearch(e.target.value)}
-                onFocus={() => setIsOpen(true)}
+                onFocus={() => {
+                    setIsOpen(true)
+                    setSearch('')
+                }}
                 onBlur={() => setTimeout(() => setIsOpen(false), 100)}
             />
-            {Boolean(search.length) && <button
+            {!isOpen && <button
                 type="button"
-                className='w-fit max-w-3 max-h-3  bg-gray-50 text-blue-900 absolute top-2 right-2 m-0 rounded-full p-3'
-                onClick={() => {
-                    setSearch('');
+                className={style.resetButton}
+                onClick={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onChange(3);
                 }}
             >
-                X
-            </button>}
-            <Select isOpen={isOpen}>
+                <FiRefreshCcw />
+            </button>
+            }
+            {isOpen && <Select>
                 {MODEL_LIST.filter(model => model.label.toLowerCase().includes(search.toLowerCase())).map((model) => (
                     <Option
                         key={model.value}
+                        isSelected={model.value === value}
                         value={model.value}
                         label={model.label}
-                        onClick={(value) => {
-                            onChange(value);
+                        onClick={(val) => {
+                            onChange(val);
                             setSearch(MODEL_LIST.find(m => m.value === value)?.label || '');
                             setIsOpen(false);
                         }}
                     />
                 ))}
-            </Select>
+            </Select>}
         </div>
     );
 }

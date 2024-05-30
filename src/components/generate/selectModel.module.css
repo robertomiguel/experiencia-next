@@ -1,0 +1,17 @@
+.select {
+    @apply absolute z-10 overflow-hidden overflow-y-scroll w-full p-2 bg-white max-h-60;
+    @apply shadow-lg rounded-lg;
+}
+
+.option {
+    @apply text-blue-950 h-6 w-full hover:cursor-pointer hover:bg-blue-400 hover:text-white pl-2 pr-2;
+    @apply rounded-full;
+}
+
+.optionSelected {
+    @apply bg-blue-900 text-gray-50;
+}
+
+.resetButton {
+    @apply w-fit top-0 hover:bg-blue-200 bg-gray-50 text-blue-900 absolute right-0 m-0 rounded-full p-3;
+}
