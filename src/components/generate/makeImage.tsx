@@ -14,6 +14,7 @@ import { DeleteAction } from "./delete.action";
 import { SettingsForm } from "./SettingsForm";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { toogleSidesheet } from "@/store/settingsSlice";
+import { Drawer } from "../common/Drawer";
 
 export const metadata: Metadata = {
     title: "ID Images",
@@ -37,6 +38,7 @@ export const MakeImage = () => {
     const [model, setModel] = useState<number>(3)
     const [isDeleting, setIsDeleting] = useState<boolean>(false)
     const [showToUpButton, setShowToUpButton] = useState<boolean>(false)
+    const [isReady, setIsReady] = useState<boolean>(false)
 
     const dispatch = useAppDispatch()
     const isSettingsOpen = useAppSelector(state => state.settings.openSidesheet)
@@ -80,6 +82,7 @@ export const MakeImage = () => {
         const localList = localStorage.getItem('drawList')
         const initialList = localList ? JSON.parse(localList) : []
         setList(initialList)
+        setIsReady(true)
 
         const handleScroll = () => {
             const top = window.scrollY;
@@ -118,30 +121,51 @@ export const MakeImage = () => {
         setIndexZoom(indexZoom === index ? null : index)
     }
 
+    const isEmptyList = list.length === 0
+
     return (
         <div>
             {showToUpButton && !isSettingsOpen &&
                 <button
                     onClick={goTop}
-                    className="fixed z-30 bottom-12 right-4 bg-blue-500 text-white rounded-full w-fit hover:bg-blue-600" >Up</button>}
-            <FormSearchInput
-                onSubmit={handleGenerate}
-                disabled={isProcessing}
-                placeholder='Describe the image in english...'
-                value={valueText}
-                onChange={t => setValueText(t)}
-                filterContent={
-                    <SettingsForm generate={handleGenerate} prompt={valueText} model={model} />
-                }
-                filterTitle='Settings'
-            />
+                    className="fixed z-30 bottom-12 right-4 bg-blue-500 text-white rounded-full w-fit hover:bg-blue-600" >
+                    Up
+                </button>
+            }
+
+            {isSettingsOpen &&
+                <Drawer onClose={() => dispatch(toogleSidesheet(false))} title="Settings" >
+                    <SettingsForm generate={handleGenerate} />
+                </Drawer>
+            }
+
             <div className="m-auto" >
                 {isProcessing && <Spinner label="Processing..." />}
             </div>
-            {list.length === 0 && !isProcessing && <div className="text-center m-auto w-fit mt-40 text-gray-500" >
-                <h4>No images yet...</h4>
-                <button className="f-full sm:w-fit mt-10" onClick={() => dispatch(toogleSidesheet(true))} >Generate your first image</button>
-            </div>}
+
+            {isReady && !isProcessing &&
+                <div className={
+                    isEmptyList
+                        ? "text-center m-auto w-fit mt-40 text-gray-500"
+                        : "mb-3 w-fit m-auto sticky top-11 z-10 p-2 bg-blue-950 bg-opacity-70 rounded-full"
+                } >
+                    {isEmptyList && <h4>No images yet...</h4>}
+                    <button
+                        className={
+                            isEmptyList
+                                ? "f-full sm:w-fit mt-10"
+                                : "f-full sm:w-fit"
+                        }
+                        onClick={() => dispatch(toogleSidesheet(true))}
+                    >
+                        {isEmptyList
+                            ? 'Generate your first image'
+                            : 'Generate new image'
+                        }
+                    </button>
+                </div>
+            }
+
             <div className={style.imageContainer} >
                 {list.map((item, index) => (
                     <div key={index} className="relative" >

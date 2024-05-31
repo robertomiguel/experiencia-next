@@ -361,17 +361,14 @@ const backgrounds = [
 
 interface SettingsProps {
     generate: (prompt: string, modelId?: number) => void
-    prompt: string
-    model: number
 }
 
-export const SettingsForm = ({ generate, model, prompt }: SettingsProps) => {
+export const SettingsForm = ({ generate }: SettingsProps) => {
 
     const dispatch = useAppDispatch()
     const imgSettings = useAppSelector(state => state.settings.image)
 
-    const [modelValue, setModelValue] = useState<number>(imgSettings?.model || model)
-    const [promptValue, setPromptValue] = useState<string>(imgSettings?.prompt || prompt || '')
+    const [modelValue, setModelValue] = useState<number>(imgSettings?.model || 3)
 
     const [hairColor, setHairColor] = useState<string>(imgSettings?.hairColor || "Brown")
     const [age, setAge] = useState<string>(imgSettings?.age || "Young adult female")
@@ -380,9 +377,8 @@ export const SettingsForm = ({ generate, model, prompt }: SettingsProps) => {
     const [dancer, setDancer] = useState<string>(imgSettings?.dancer || "Ballet dancer")
     const [background, setBackground] = useState<string>(imgSettings?.background || "Stage")
 
-    const handleCreatePrompt = (gen?: boolean) => {
+    const handleCreatePrompt = () => {
         const newPrompt = `A ${age} ${ethnicGroup} ${dancer} with ${hairColor} hair and ${eyeColor} eyes in front of ${background}.`;
-        setPromptValue(newPrompt)
         dispatch(setImageSettings({
             prompt: newPrompt,
             model: modelValue,
@@ -393,34 +389,14 @@ export const SettingsForm = ({ generate, model, prompt }: SettingsProps) => {
             dancer,
             background
         }))
-        if (gen) {
-            generate(newPrompt, modelValue)
-        }
+        generate(newPrompt, modelValue)
     }
-
-    useEffect(() => {
-        if (prompt.trim() === "") handleCreatePrompt()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [prompt])
 
     return (
         <div className="flex flex-col gap-4" >
             <div>
-                <h5>Prompt</h5>
-                <textarea
-                    value={promptValue}
-                    onChange={e => setPromptValue(e.target.value)}
-                    maxLength={1000}
-                    rows={5}
-                    placeholder="Write a prompt here..."
-                />
-            </div>
-            <div>
-                <h5>Model</h5>
+                <h5>Model engine</h5>
                 <SelectModel onChange={v => setModelValue(v)} value={modelValue} />
-            </div>
-            <div>
-                <button onClick={() => generate(promptValue, modelValue)}>Generate</button>
             </div>
 
             <div>
@@ -454,8 +430,7 @@ export const SettingsForm = ({ generate, model, prompt }: SettingsProps) => {
             </div>
 
             <div className="flex gap-3" >
-                <button onClick={() => handleCreatePrompt()} >Create prompt</button>
-                <button onClick={() => handleCreatePrompt(true)} >Generate with new prompt</button>
+                <button onClick={() => handleCreatePrompt()} >Generate image</button>
             </div>
 
         </div>
