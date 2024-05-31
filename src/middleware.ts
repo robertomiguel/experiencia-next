@@ -12,6 +12,7 @@ const publicRoutes = [
     '/api/login/register',
     '/api/seed',
     '/iadraw',
+    '/crypto',
 ];
 
 const noAccessIfLogged = [

@@ -6,6 +6,7 @@ export const MainMenu = () => {
         { label: 'Home', href: '/home' },
         { label: 'Wiki', href: '/wiki' },
         { label: 'IA Draw', href: '/iadraw' },
+        { label: 'Crypto', href: '/crypto' },
         /* { label: 'Images', href: '/images' }, */
     ];
     return (
