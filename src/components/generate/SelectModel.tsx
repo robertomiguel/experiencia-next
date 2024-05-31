@@ -1,6 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
-import style from './selectModel.module.css'
-import { FiRefreshCcw } from 'react-icons/fi';
+import { Select } from '../common/Select';
 
 const MODEL_LIST = [
     { value: 1, label: "Viento antiguo" },
@@ -69,104 +67,14 @@ const MODEL_LIST = [
     { value: 64, label: "Tú beta" },
 ];
 
-
-interface OptionProps {
-    value: number;
-    label: string;
-    onClick: (value: number) => void;
-    isSelected?: boolean;
-}
-
-interface SelectProps {
-    children: React.ReactNode;
-}
-
 interface Props {
     onChange: (v: number) => void;
     value?: number;
 }
 
-const Option = ({ value, label, onClick, isSelected }: OptionProps) => {
-    const optionRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (isSelected && optionRef.current) {
-            optionRef.current.scrollIntoView({ behavior: "instant", block: "nearest", inline: "nearest" });
-        }
-    }, [isSelected]);
-
-    return (
-        <div
-            ref={optionRef}
-            className={style.option + (isSelected ? ' ' + style.optionSelected : '')}
-            onClick={() => onClick(value)}
-        >
-            {label}
-        </div>
-    );
-}
-
-const Select = ({ children }: SelectProps) => {
-    return (
-        <div className={style.select}>
-            {children}
-        </div>
-    );
-}
-
 export const SelectModel = ({ onChange, value = 3 }: Props) => {
-    const [search, setSearch] = useState('');
-    const [isOpen, setIsOpen] = useState(false);
-
-    useEffect(() => {
-        setSearch(MODEL_LIST.find(m => m.value === value)?.label || '');
-    }, [value]);
-
-    const getLabelByValue = (value: number) => MODEL_LIST.find(m => m.value === value)?.label || '';
-
-    const removeAccent = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
-
-    const filteredList = MODEL_LIST.filter(f => removeAccent(`${f.label}`).includes(removeAccent(search)));
 
     return (
-        <div className='relative w-full m-auto mb-3 '>
-            <input
-                type="text"
-                value={isOpen ? search : getLabelByValue(value)}
-                onChange={(e) => setSearch(e.target.value)}
-                onFocus={() => {
-                    setIsOpen(true)
-                    setSearch('')
-                }}
-                onBlur={() => setTimeout(() => setIsOpen(false), 100)}
-            />
-            {!isOpen && <button
-                type="button"
-                className={style.resetButton}
-                onClick={e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onChange(3);
-                }}
-            >
-                <FiRefreshCcw />
-            </button>
-            }
-            {isOpen && <Select>
-                {filteredList.map((model) => (
-                    <Option
-                        key={model.value}
-                        isSelected={model.value === value}
-                        value={model.value}
-                        label={model.label}
-                        onClick={(val) => {
-                            onChange(val);
-                            setSearch(MODEL_LIST.find(m => m.value === value)?.label || '');
-                            setIsOpen(false);
-                        }}
-                    />
-                ))}
-            </Select>}
-        </div>
+        <Select showReset defaultValue={3} onChange={onChange} value={value} options={MODEL_LIST} />
     );
 }

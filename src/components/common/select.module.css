@@ -9,7 +9,7 @@
 }
 
 .optionSelected {
-    @apply bg-blue-900 text-gray-50;
+    @apply bg-blue-700 text-gray-50 hover:text-blue-950;
 }
 
 .resetButton {

@@ -1,4 +1,4 @@
-import { SettingsState } from "@/types/settings";
+import { ImageSettings, SettingsState } from "@/types/settings";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const settingsSlice = createSlice({
@@ -10,9 +10,12 @@ const settingsSlice = createSlice({
         toogleSidesheet(state, action: PayloadAction<boolean>) {
             state.openSidesheet = action.payload;
         },
+        setImageSettings(state, action: PayloadAction<Partial<ImageSettings>>) {
+            state.image = { ...state.image, ...action.payload };
+        }
     },
 });
 
-export const { toogleSidesheet } = settingsSlice.actions;
+export const { toogleSidesheet, setImageSettings } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

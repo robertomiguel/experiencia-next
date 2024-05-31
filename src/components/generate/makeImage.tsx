@@ -12,7 +12,7 @@ import { ImageActions } from "./ImageActions";
 import { Metadata } from "next";
 import { DeleteAction } from "./delete.action";
 import { SettingsForm } from "./SettingsForm";
-import { useAppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { toogleSidesheet } from "@/store/settingsSlice";
 
 export const metadata: Metadata = {
@@ -39,6 +39,7 @@ export const MakeImage = () => {
     const [showToUpButton, setShowToUpButton] = useState<boolean>(false)
 
     const dispatch = useAppDispatch()
+    const isSettingsOpen = useAppSelector(state => state.settings.openSidesheet)
 
     const handleGenerate = async (prompt: string, modelId?: number) => {
         setModel(modelId || model)
@@ -119,7 +120,7 @@ export const MakeImage = () => {
 
     return (
         <div>
-            {showToUpButton &&
+            {showToUpButton && !isSettingsOpen &&
                 <button
                     onClick={goTop}
                     className="fixed z-30 bottom-12 right-4 bg-blue-500 text-white rounded-full w-fit hover:bg-blue-600" >Up</button>}
@@ -137,6 +138,10 @@ export const MakeImage = () => {
             <div className="m-auto" >
                 {isProcessing && <Spinner label="Processing..." />}
             </div>
+            {list.length === 0 && !isProcessing && <div className="text-center m-auto w-fit mt-40 text-gray-500" >
+                <h4>No images yet...</h4>
+                <button className="f-full sm:w-fit mt-10" onClick={() => dispatch(toogleSidesheet(true))} >Generate your first image</button>
+            </div>}
             <div className={style.imageContainer} >
                 {list.map((item, index) => (
                     <div key={index} className="relative" >
