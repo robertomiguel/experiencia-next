@@ -16,59 +16,59 @@ interface SymbolData {
 const symbolList = [
     {
         label: 'Bitcoin / TetherUS BTCUSDT',
-        value: 'BINANCE:BTCUSDT'
+        value: 'BINANCE%3ABTCUSDT'
     },
     {
         label: 'Apple Inc AAPL',
-        value: 'NASDAQ:AAPL'
+        value: 'NASDAQ%3AAAPL'
     },
     {
         label: 'Alphabet Inc (Google) Class A GOOGL',
-        value: 'NASDAQ:GOOGL'
+        value: 'NASDAQ%3AGOOGL'
     },
     {
         label: 'Amazon.com AMZN',
-        value: 'NASDAQ:AMZN'
+        value: 'NASDAQ%3AAMZN'
     },
     {
         label: 'Microsoft Corp. MSFT',
-        value: 'NASDAQ:MSFT'
+        value: 'NASDAQ%3AMSFT'
     },
     {
         label: 'Tesla TSLA',
-        value: 'NASDAQ:TSLA'
+        value: 'NASDAQ%3ATSLA'
     },
     {
         label: 'NVIDIA NVDA',
-        value: 'NASDAQ:NVDA'
+        value: 'NASDAQ%3ANVDA'
     },
     {
         label: 'PayPal Holdings, Inc. PYPL',
-        value: 'NASDAQ:PYPL'
+        value: 'NASDAQ%3APYPL'
     },
     {
         label: 'Intel Corporation INTC',
-        value: 'NASDAQ:INTC'
+        value: 'NASDAQ%3AINTC'
     },
     {
         label: 'Adobe Inc. ADBE',
-        value: 'NASDAQ:ADBE'
+        value: 'NASDAQ%3AADBE'
     },
     {
         label: 'Comcast Corporation CMCSA',
-        value: 'NASDAQ:CMCSA'
+        value: 'NASDAQ%3ACMCSA'
     },
     {
         label: 'Cisco Systems, Inc. CSCO',
-        value: 'NASDAQ:CSCO'
+        value: 'NASDAQ%3ACSCO'
     },
     {
         label: 'PepsiCo, Inc. PEP',
-        value: 'NASDAQ:PEP'
+        value: 'NASDAQ%3APEP'
     },
     {
         label: 'Broadcom Inc. AVGO',
-        value: 'NASDAQ:AVGO'
+        value: 'NASDAQ%3AAVGO'
     },
 ]
 
@@ -76,7 +76,7 @@ export const CryptoSocket = () => {
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
     const [symbolData, setSymbolData] = useState<SymbolData>()
-    const [symbol, setSymbol] = useState<string>('BINANCE:BTCUSDT')
+    const [symbol, setSymbol] = useState<string>('BINANCE%3ABTCUSDT')
     const [isChange, setIsChange] = useState<boolean>(false)
 
     const getSymbolPrice = () => {
