@@ -22,6 +22,8 @@ export async function GET(request: NextRequest) {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
         'Origin': 'https://www.tradingview.com',
         'Referer': 'https://www.tradingview.com',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
     }
 
     const response = await axios.get(url, { headers });
