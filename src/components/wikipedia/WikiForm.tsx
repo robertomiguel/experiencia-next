@@ -22,7 +22,10 @@ export default function WikiForm({ q }: { q?: string }) {
                         autoComplete="none"
                         placeholder="Search on wikipedia..."
                     />
-                    <button type="submit" className="w-fit hover:bg-blue-200 bg-gray-50 text-blue-900 absolute right-0 m-0 rounded-full p-3 " >
+                    <button
+                        type="submit"
+                        className="w-fit hover:bg-blue-200 bg-gray-50 text-blue-900 absolute right-3 top-3 m-0 rounded-full p-2 "
+                    >
                         <FiSearch />
                     </button>
                 </div>

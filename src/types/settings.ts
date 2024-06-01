@@ -4,7 +4,8 @@ export interface ImageSettings {
     model: number
     hairColor: string
     eyeColor: string
-    age: string
+    age: number
+    gender: 'female' | 'male' | 'no binary'
     ethnicGroup: string
     dancer: string
     background: string

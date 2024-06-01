@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { SelectModel } from "./SelectModel"
 import { Select } from "../common/Select";
 import { useAppDispatch, useAppSelector } from "@/store";
@@ -108,65 +108,6 @@ const hairColors = [
     {
         label: "Sin Pelo",
         value: "Bald"
-    }
-];
-
-const ageOptions = [
-    {
-        label: "Infante femenino",
-        value: "Female infant"
-    },
-    {
-        label: "Infante masculino",
-        value: "Male infant"
-    },
-    {
-        label: "Niña",
-        value: "Girl"
-    },
-    {
-        label: "Niño",
-        value: "Boy"
-    },
-    {
-        label: "Preadolescente femenino",
-        value: "Pre-teen girl"
-    },
-    {
-        label: "Preadolescente masculino",
-        value: "Pre-teen boy"
-    },
-    {
-        label: "Adolescente femenino",
-        value: "Female teenager"
-    },
-    {
-        label: "Adolescente masculino",
-        value: "Male teenager"
-    },
-    {
-        label: "Joven Adulta",
-        value: "Young adult female"
-    },
-    {
-        label: "Joven Adulto",
-        value: "Young adult male"
-    },
-    {
-        label: "Madura",
-        value: "Mature woman"
-    },
-    {
-        label: "Maduro",
-        value: "Mature man"
-    },
-    {
-        label: "Anciana",
-        value: "Elderly woman"
-    },
-    {
-        label: "Anciano",
-        value: "Elderly man"
     }
 ];
 
@@ -358,6 +299,21 @@ const backgrounds = [
     }
 ];
 
+const genderLiat = [
+    {
+        label: 'Femenino',
+        value: 'female',
+    },
+    {
+        label: 'Masculino',
+        value: 'male',
+    },
+    {
+        label: 'No binario',
+        value: 'no binary',
+    }
+]
+
 
 interface SettingsProps {
     generate: (prompt: string, modelId?: number) => void
@@ -371,20 +327,33 @@ export const SettingsForm = ({ generate }: SettingsProps) => {
     const [modelValue, setModelValue] = useState<number>(imgSettings?.model || 3)
 
     const [hairColor, setHairColor] = useState<string>(imgSettings?.hairColor || "Brown")
-    const [age, setAge] = useState<string>(imgSettings?.age || "Young adult female")
+    const [gender, setGender] = useState(imgSettings?.gender || 'female')
+    const [age, setAge] = useState<number>(imgSettings?.age || 20)
     const [eyeColor, setEyeColor] = useState<string>(imgSettings?.eyeColor || "Brown")
     const [ethnicGroup, setEthnicGroup] = useState<string>(imgSettings?.ethnicGroup || "Caucasian")
     const [dancer, setDancer] = useState<string>(imgSettings?.dancer || "Ballet dancer")
     const [background, setBackground] = useState<string>(imgSettings?.background || "Stage")
 
     const handleCreatePrompt = () => {
-        const newPrompt = `A ${age} ${ethnicGroup} ${dancer} with ${hairColor} hair and ${eyeColor} eyes in front of ${background}.`;
+        let genderType = ''
+
+        if ( age < 5 ) genderType = 'infant'
+        if ( age >= 5 && age < 10 ) genderType = 'child'
+        if ( age >= 10 && age < 13 ) genderType = 'pre-teen'
+        if ( age >= 13 && age < 18 ) genderType = 'teenager'
+        if ( age >= 18 && age < 30 ) genderType = 'young adult'
+        if ( age >= 30 && age < 60 ) genderType = 'adult'
+        if ( age >= 60 ) genderType = 'elderly'
+        
+
+        const newPrompt = `A ${age} year-old ${genderType} ${gender} ${ethnicGroup} ${dancer} with ${hairColor} hair and ${eyeColor} eyes in front of ${background}.`;
         dispatch(setImageSettings({
             prompt: newPrompt,
             model: modelValue,
             hairColor,
             eyeColor,
             age,
+            gender,
             ethnicGroup,
             dancer,
             background
@@ -400,32 +369,37 @@ export const SettingsForm = ({ generate }: SettingsProps) => {
             </div>
 
             <div>
-                <h5>Estilo de baile</h5>
+                <h5>Dance style</h5>
                 <Select onChange={v => setDancer(v)} value={dancer} options={dancerStyle} />
             </div>
 
             <div>
-                <h5>Fondo</h5>
+                <h5>Background</h5>
                 <Select onChange={v => setBackground(v)} value={background} options={backgrounds} />
             </div>
 
             <div>
-                <h5>Selección de color de pelo</h5>
+                <h5>Hair color</h5>
                 <Select onChange={v => setHairColor(v)} value={hairColor} options={hairColors} />
             </div>
 
             <div>
-                <h5>Selección de color de ojos</h5>
+                <h5>Eyes color</h5>
                 <Select onChange={v => setEyeColor(v)} value={eyeColor} options={eyeColors} />
             </div>
 
             <div>
-                <h5>Edad</h5>
-                <Select onChange={v => setAge(v)} value={age} options={ageOptions} />
+                <h5>Gender</h5>
+                <Select onChange={v => setGender(v)} value={gender} options={genderLiat} />
             </div>
 
             <div>
-                <h5>Étnia</h5>
+                <h5>({age}) Year-old</h5>
+                <input type="range" min="1" max="100" step="1" value={age} onChange={e => setAge(parseInt(e.target.value))} />
+            </div>
+
+            <div>
+                <h5>Ethnic</h5>
                 <Select onChange={v => setEthnicGroup(v)} value={ethnicGroup} options={ethnicGroups} />
             </div>
 

@@ -1,11 +1,16 @@
-import { TradingViewWidget } from "@/components/crypto/TradingViewWidget";
-
+import BlockchainApp from "@/components/crypto/BlockchainApp";
+import { CryptoSocket } from "@/components/crypto/CryptoSocket";
 
 export default function CryptoPage() {
 
     return (
         <div>
-            <TradingViewWidget />
+            <div>
+                <CryptoSocket />
+            </div>
+            <div>
+                <BlockchainApp />
+            </div>
         </div>
     )
 }

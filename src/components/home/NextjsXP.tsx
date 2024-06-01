@@ -33,6 +33,7 @@ export const NextjsXP = () => {
         <div className='flex flex-col gap-3 justify-center items-center' >
             <Link href='/wiki'>Demo Api Res Wikipedia</Link>
             <Link href='/iadraw'>Demo IA Text to Image</Link>
+            <Link href='/crypto'>Demo Blockchain</Link>
         </div>
     </div>);
 }
