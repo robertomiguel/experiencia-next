@@ -49,6 +49,7 @@ const BlockchainApp = (): JSX.Element => {
                         readOnly
                         type="text"
                         value={selectBlock?.index}
+                        className='bg-transparent border-solid border-2 border-gray-50 text-gray-50 '
                     />
                     <label>Data</label>
                     <input

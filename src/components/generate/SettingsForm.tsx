@@ -14,101 +14,87 @@ const hairColors = [
         value: "Black",
     },
     {
-        label: "Negro Corto",
-        value: "Short Black",
-    },
-    {
-        label: "Negro Largo",
-        value: "Long Black",
-    },
-    {
         label: "Castaño Oscuro",
         value: "Dark Brown",
-    },
-    {
-        label: "Castaño Oscuro Corto",
-        value: "Short Dark Brown",
-    },
-    {
-        label: "Castaño Oscuro Largo",
-        value: "Long Dark Brown",
     },
     {
         label: "Castaño",
         value: "Brown",
     },
     {
-        label: "Castaño Corto",
-        value: "Short Brown",
-    },
-    {
-        label: "Castaño Largo",
-        value: "Long Brown",
-    },
-    {
         label: "Rubio Oscuro",
         value: "Dark Blonde",
-    },
-    {
-        label: "Rubio Oscuro Corto",
-        value: "Short Dark Blonde",
-    },
-    {
-        label: "Rubio Oscuro Largo",
-        value: "Long Dark Blonde",
     },
     {
         label: "Rubio",
         value: "Blonde",
     },
     {
-        label: "Rubio Corto",
-        value: "Short Blonde",
-    },
-    {
-        label: "Rubio Largo",
-        value: "Long Blonde",
-    },
-    {
         label: "Rubio Platino",
         value: "Platinum Blonde",
-    },
-    {
-        label: "Rubio Platino Corto",
-        value: "Short Platinum Blonde",
-    },
-    {
-        label: "Rubio Platino Largo",
-        value: "Long Platinum Blonde",
     },
     {
         label: "Pelirrojo",
         value: "Redhead",
     },
     {
-        label: "Pelirrojo Corto",
-        value: "Short Redhead",
-    },
-    {
-        label: "Pelirrojo Largo",
-        value: "Long Redhead",
-    },
-    {
         label: "Gris",
         value: "Gray",
     },
+];
+
+const hairStyles = [
     {
-        label: "Gris Corto",
-        value: "Short Gray",
+        label: "Liso",
+        value: "Straight"
     },
     {
-        label: "Gris Largo",
-        value: "Long Gray",
+        label: "Ondulado",
+        value: "Wavy"
     },
     {
-        label: "Sin Pelo",
+        label: "Rizado",
+        value: "Curly"
+    },
+    {
+        label: "Afro",
+        value: "Afro"
+    },
+    {
+        label: "Rastas",
+        value: "Dreadlocks"
+    },
+    {
+        label: "Trenzas",
+        value: "Braids"
+    },
+    {
+        label: "Cola de caballo",
+        value: "Ponytail"
+    },
+    {
+        label: "Moño",
+        value: "Bun"
+    },
+];
+
+const hairLengths = [
+    {
+        label: "Corto",
+        value: "Short"
+    },
+    {
+        label: "Mediano",
+        value: "Medium"
+    },
+    {
+        label: "Largo",
+        value: "Long"
+    },
+    {
+        label: "Calvo",
         value: "Bald"
-    }
+    },
 ];
 
 const eyeColors = [
@@ -299,7 +285,7 @@ const backgrounds = [
     }
 ];
 
-const genderLiat = [
+const genderList = [
     {
         label: 'Femenino',
         value: 'female',
@@ -333,24 +319,19 @@ export const SettingsForm = ({ generate }: SettingsProps) => {
     const [ethnicGroup, setEthnicGroup] = useState<string>(imgSettings?.ethnicGroup || "Caucasian")
     const [dancer, setDancer] = useState<string>(imgSettings?.dancer || "Ballet dancer")
     const [background, setBackground] = useState<string>(imgSettings?.background || "Stage")
+    const [hairStyle, setHairStyle] = useState<string>(imgSettings?.hairStyle || "Straight")
+    const [hairLength, setHairLength] = useState<string>(imgSettings?.hairLength || "Medium")
 
     const handleCreatePrompt = () => {
-        let genderType = ''
-
-        if ( age < 5 ) genderType = 'infant'
-        if ( age >= 5 && age < 10 ) genderType = 'child'
-        if ( age >= 10 && age < 13 ) genderType = 'pre-teen'
-        if ( age >= 13 && age < 18 ) genderType = 'teenager'
-        if ( age >= 18 && age < 30 ) genderType = 'young adult'
-        if ( age >= 30 && age < 60 ) genderType = 'adult'
-        if ( age >= 60 ) genderType = 'elderly'
         
+        const newPrompt = `A ${age}-year-old ${gender} ${ethnicGroup} dancer with ${hairLength} ${hairColor} ${hairStyle} hair and ${eyeColor} eyes, standing in front of a ${background}.`;
 
-        const newPrompt = `A ${age} year-old ${genderType} ${gender} ${ethnicGroup} ${dancer} with ${hairColor} hair and ${eyeColor} eyes in front of ${background}.`;
         dispatch(setImageSettings({
             prompt: newPrompt,
             model: modelValue,
             hairColor,
+            hairLength,
+            hairStyle,
             eyeColor,
             age,
             gender,
@@ -384,13 +365,23 @@ export const SettingsForm = ({ generate }: SettingsProps) => {
             </div>
 
             <div>
+                <h5>Hair style</h5>
+                <Select onChange={v => setHairStyle(v)} value={hairStyle} options={hairStyles} />
+            </div>
+
+            <div>
+                <h5>Hair length</h5>
+                <Select onChange={v => setHairLength(v)} value={hairLength} options={hairLengths} />
+            </div>
+
+            <div>
                 <h5>Eyes color</h5>
                 <Select onChange={v => setEyeColor(v)} value={eyeColor} options={eyeColors} />
             </div>
 
             <div>
                 <h5>Gender</h5>
-                <Select onChange={v => setGender(v)} value={gender} options={genderLiat} />
+                <Select onChange={v => setGender(v)} value={gender} options={genderList} />
             </div>
 
             <div>

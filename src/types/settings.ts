@@ -3,6 +3,8 @@ export interface ImageSettings {
     prompt: string
     model: number
     hairColor: string
+    hairLength: string
+    hairStyle: string
     eyeColor: string
     age: number
     gender: 'female' | 'male' | 'no binary'

@@ -13,7 +13,6 @@ const publicRoutes = [
     '/api/seed',
     '/iadraw',
     '/crypto',
-    '/api/crypto',
 ];
 
 const noAccessIfLogged = [

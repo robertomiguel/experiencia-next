@@ -96,3 +96,57 @@ model User {
 
   ImageByUser ImageByUser[]
 }
+
+model ModelSDV {
+  id    Int    @id @default(autoincrement())
+  name  String
+  label String
+}
+
+model HairColors {
+  id    Int    @id @default(autoincrement())
+  value String @unique
+  label String
+}
+
+model HairLengths {
+  id    Int    @id @default(autoincrement())
+  value String @unique
+  label String
+}
+
+model HairStyles {
+  id    Int    @id @default(autoincrement())
+  value String @unique
+  label String
+}
+
+model EyeColors {
+  id    Int    @id @default(autoincrement())
+  value String @unique
+  label String
+}
+
+model EthnicGroups {
+  id    Int    @id @default(autoincrement())
+  value String @unique
+  label String
+}
+
+model DancerStyles {
+  id    Int    @id @default(autoincrement())
+  value String @unique
+  label String
+}
+
+model Backgrounds {
+  id    Int    @id @default(autoincrement())
+  value String @unique
+  label String
+}
+
+model GenderList {
+  id    Int    @id @default(autoincrement())
+  value String @unique
+  label String
+}
