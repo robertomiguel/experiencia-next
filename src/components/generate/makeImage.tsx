@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { useEffect, useState } from "react"
@@ -188,15 +189,11 @@ export const MakeImage = () => {
                             onZoom={handleZoom}
                             isZoom={indexZoom === index}
                         />
-                        <Image
+                        <img
                             key={`img-${index}`}
                             id={`img-${index}`}
                             src={item.url}
                             alt='generated'
-                            priority
-                            width='0'
-                            height='0'
-                            sizes="100vw"
                             className="rounded-lg"
                             style={{ width: indexZoom === index ? '1024px' : '512px', height: 'auto' }}
                         />
