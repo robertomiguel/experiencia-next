@@ -50,7 +50,7 @@ const SelectList = ({ children }: SelectProps) => {
     );
 }
 
-export const Select = ({ onChange, value, options, showReset, defaultValue }: Props) => {
+export const Select = ({ onChange, value, options = [], showReset, defaultValue }: Props) => {
     const [search, setSearch] = useState('');
     const [isOpen, setIsOpen] = useState(false);
 

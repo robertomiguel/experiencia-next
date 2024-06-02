@@ -48,5 +48,22 @@ export interface ImageItem {
     url: string
     seed: string
     prompt: string
-    model: string
+    model: number
+}
+
+interface Option {
+    label: any
+    value: any
+}
+
+export interface ImageSchema {
+    dancerStyles: Option[]
+    backgrounds: Option[]
+    hairColors: Option[]
+    hairStyles: Option[]
+    hairLengths: Option[]
+    eyeColors: Option[]
+    genderList: Option[]
+    ethnicGroups: Option[]
+    modelList: Option[]
 }

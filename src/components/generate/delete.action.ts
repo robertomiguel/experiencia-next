@@ -4,7 +4,7 @@ import { createHash } from 'crypto';
 
 export const DeleteAction = async (publicId: string) => {
 
-    const url = `https://api.cloudinary.com/v1_1/${process.env.IMAGE_CLOUD_NAME}/image/destroy`
+    const url = process.env.IMAGE_CLOUD_DELETE || ''
 
     try {
         const timestamp = new Date().getTime().toString()

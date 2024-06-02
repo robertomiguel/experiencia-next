@@ -13,6 +13,7 @@ const publicRoutes = [
     '/api/seed',
     '/iadraw',
     '/crypto',
+    '/api/image/get',
 ];
 
 const noAccessIfLogged = [
@@ -30,6 +31,11 @@ export async function middleware(request: NextRequest) {
     // cargar archivos estaticos
     const isStaticAsset = nextUrl.startsWith('/_next/static/') || nextUrl.includes('.');
     if (isStaticAsset) {
+        return NextResponse.next();
+    }
+
+    const isImage = nextUrl.startsWith('/api/image/get') || nextUrl.includes('.');
+    if (isImage) {
         return NextResponse.next();
     }
 

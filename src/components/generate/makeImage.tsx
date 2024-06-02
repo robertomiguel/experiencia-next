@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { GenerateAction } from "./generate.action"
 import { GetImageAction } from "./getImage.action"
-import { FormSearchInput } from "../common/FormSearchInput";
 import Image from "next/image";
 import style from './makeImage.module.css'
 import { Spinner } from "../common/Spinner";
@@ -15,6 +14,8 @@ import { SettingsForm } from "./SettingsForm";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { toogleSidesheet } from "@/store/settingsSlice";
 import { Drawer } from "../common/Drawer";
+import { GetSchemaImageDataAction } from "./getSchemaImageData.action";
+import { loadList } from "@/store/imageSchemaSlice";
 
 export const metadata: Metadata = {
     title: "ID Images",
@@ -34,7 +35,6 @@ export const MakeImage = () => {
     const [list, setList] = useState<ImageItem[]>([])
     const [isProcessing, setIsProcessing] = useState<boolean>(false)
     const [indexZoom, setIndexZoom] = useState<number | null>(null)
-    const [valueText, setValueText] = useState<string>('')
     const [model, setModel] = useState<number>(3)
     const [isDeleting, setIsDeleting] = useState<boolean>(false)
     const [showToUpButton, setShowToUpButton] = useState<boolean>(false)
@@ -45,7 +45,6 @@ export const MakeImage = () => {
 
     const handleGenerate = async (prompt: string, modelId?: number) => {
         setModel(modelId || model)
-        setValueText(prompt)
         dispatch(toogleSidesheet(false))
         let text = prompt
         try {
@@ -68,7 +67,8 @@ export const MakeImage = () => {
             count++
             const res: ProcessRes = await GetImageAction({ job })
             if (res.isReady) {
-                const newList = [res.data, ...list]
+                const newImg = {...res.data, model}
+                const newList = [newImg, ...list]
                 setList(newList)
                 localStorage.setItem('drawList', JSON.stringify(newList))
                 finished = true
@@ -78,11 +78,18 @@ export const MakeImage = () => {
         }
     }
 
+
+    const loadSchemaData = async () => {
+            const res = await GetSchemaImageDataAction()
+            dispatch( loadList(res as any) )
+    }
+
     useEffect(() => {
         const localList = localStorage.getItem('drawList')
         const initialList = localList ? JSON.parse(localList) : []
         setList(initialList)
         setIsReady(true)
+        loadSchemaData()
 
         const handleScroll = () => {
             const top = window.scrollY;
@@ -93,13 +100,15 @@ export const MakeImage = () => {
             window.removeEventListener('scroll', handleScroll);
         };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleDelete = async (index: number) => {
         if (!window.confirm('Are you sure you want to delete this image?')) return
         setIsDeleting(true)
         const url = list[index].url
-        const publicId = url.split('/').slice(-3).join('/').split('.')[0]
+        const p = url.indexOf('iadraw')
+        const publicId = url.slice(p).replace('.png', '').split('&')[0]
         const res = await DeleteAction(publicId)
         let confirm = true
         if (!res) {
@@ -114,7 +123,7 @@ export const MakeImage = () => {
     }
 
     const handleRebuild = async (index: number) => {
-        await handleGenerate(list[index].prompt)
+        await handleGenerate(list[index].prompt, list[index].model)
     }
 
     const handleZoom = (index: number) => {
@@ -183,7 +192,6 @@ export const MakeImage = () => {
                             key={`img-${index}`}
                             id={`img-${index}`}
                             src={item.url}
-                            loader={() => item.url + '?width=512'}
                             alt='generated'
                             priority
                             width='0'

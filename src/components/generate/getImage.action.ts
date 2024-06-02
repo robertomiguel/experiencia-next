@@ -24,7 +24,7 @@ export const GetImageAction = async ({ job }: { job: string }) => {
         try {
             if (processRes.status === 'succeeded') {
 
-                const cloud_url = `https://api.cloudinary.com/v1_1/${process.env.IMAGE_CLOUD_NAME}/image/upload`
+                const cloud_url = process.env.IMAGE_CLOUD_UPLOAD as string
 
                 const formData = new FormData();
                 formData.append("api_key", process.env.IMAGE_CLOUD_API_KEY as string);
@@ -37,6 +37,12 @@ export const GetImageAction = async ({ job }: { job: string }) => {
                 const result = await axios.post(cloud_url, formData)
 
                 url = result.data.secure_url || result.data.url || url
+
+                const urlParams = url.split('/upload/v')[1].split('/iadraw/');
+                const v = urlParams[0];
+                const i = urlParams[1].slice(0, -4);
+
+                url = `/api/image/get?i=iadraw/${i}&v=${v}`
 
                 await prisma.jobs.update({
                     where: {
@@ -57,7 +63,6 @@ export const GetImageAction = async ({ job }: { job: string }) => {
             data: {
                 seed: `${processRes.params.request.seed}`,
                 prompt: processRes.params.request.prompt,
-                model: processRes.params.options.sd_model_checkpoint,
                 url,
             }
         } as ProcessRes

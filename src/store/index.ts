@@ -3,6 +3,7 @@ import dashReducer from './imagesSlice'
 import wikiReducer from './wikiSlice'
 import userReducer from './userSlice'
 import settingsSlice from './settingsSlice'
+import schemaImageSlice from './imageSchemaSlice'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 // import { localStoreMiddleware } from './middlewares/localstore-middleware'
 
@@ -12,6 +13,7 @@ export const store = configureStore({
         wikipedia: wikiReducer,
         user: userReducer,
         settings: settingsSlice,
+        schemaImage: schemaImageSlice,
     },
     // middleware: (gDM) => gDM().concat(localStoreMiddleware),
 })
