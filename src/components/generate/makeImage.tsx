@@ -11,11 +11,11 @@ import { ImageActions } from "./ImageActions";
 import { Metadata } from "next";
 import { DeleteAction } from "./delete.action";
 import { SettingsForm } from "./SettingsForm";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { toogleSidesheet } from "@/store/settingsSlice";
 import { Drawer } from "../common/Drawer";
 import { GetSchemaImageDataAction } from "./getSchemaImageData.action";
-import { loadList } from "@/store/imageSchemaSlice";
+import { useSettingsStore } from "@/store/useSettingsStore";
+import { useSchemaImageStore } from "@/store/useSchemaImageStore"
+
 
 export const metadata: Metadata = {
     title: "ID Images",
@@ -40,12 +40,13 @@ export const MakeImage = () => {
     const [showToUpButton, setShowToUpButton] = useState<boolean>(false)
     const [isReady, setIsReady] = useState<boolean>(false)
 
-    const dispatch = useAppDispatch()
-    const isSettingsOpen = useAppSelector(state => state.settings.openSidesheet)
+    const isSettingsOpen = useSettingsStore(state => state.openSidesheet)
+    const toogleSidesheet = useSettingsStore(state => state.toogleSidesheet)
+    const setSchemaImage = useSchemaImageStore(state => state.setSchemaImage)
 
     const handleGenerate = async (prompt: string, modelId?: number) => {
         setModel(modelId || model)
-        dispatch(toogleSidesheet(false))
+        toogleSidesheet(false)
         let text = prompt
         try {
             setIsProcessing(true)
@@ -81,7 +82,7 @@ export const MakeImage = () => {
 
     const loadSchemaData = async () => {
             const res = await GetSchemaImageDataAction()
-            dispatch( loadList(res as any) )
+            setSchemaImage(res)
     }
 
     useEffect(() => {
@@ -143,7 +144,7 @@ export const MakeImage = () => {
             }
 
             {isSettingsOpen &&
-                <Drawer onClose={() => dispatch(toogleSidesheet(false))} title="Settings" >
+                <Drawer onClose={() => toogleSidesheet(false)} title="Settings" >
                     <SettingsForm generate={handleGenerate} />
                 </Drawer>
             }
@@ -165,7 +166,7 @@ export const MakeImage = () => {
                                 ? "f-full sm:w-fit mt-10"
                                 : "f-full sm:w-fit"
                         }
-                        onClick={() => dispatch(toogleSidesheet(true))}
+                        onClick={() => toogleSidesheet(true)}
                     >
                         {isEmptyList
                             ? 'Generate your first image'

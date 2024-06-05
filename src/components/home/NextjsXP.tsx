@@ -16,7 +16,8 @@ const list = [
     'Redux Toolkit',
     'Formik',
     'Yup',
-    'Responsive design'
+    'Responsive design',
+    'Zustand',
 ];
 
 export const NextjsXP = () => {

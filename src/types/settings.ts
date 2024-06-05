@@ -16,4 +16,6 @@ export interface ImageSettings {
 export interface SettingsState {
     openSidesheet: boolean
     image: ImageSettings
+    updateSettings: (newSettings: ImageSettings) => void
+    toogleSidesheet: (open: boolean) => void
 }

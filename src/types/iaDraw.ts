@@ -67,3 +67,8 @@ export interface ImageSchema {
     ethnicGroups: Option[]
     modelList: Option[]
 }
+
+export interface ImageSchemaState {
+    list: ImageSchema
+    setSchemaImage: (schemaImage: ImageSchema) => void
+}

@@ -1,9 +1,8 @@
 'use client'
-import { useState } from "react"
 import { Select } from "../common/Select";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { setImageSettings } from "@/store/settingsSlice";
 import { ImageSettings } from "@/types/settings";
+import { useSettingsStore } from "@/store/useSettingsStore";
+import { useSchemaImageStore } from "@/store/useSchemaImageStore";
 
 interface SettingsProps {
     generate: (prompt: string, modelId?: number) => void
@@ -58,43 +57,28 @@ const formFields = [
 
 export const SettingsForm = ({ generate }: SettingsProps) => {
 
-    const dispatch = useAppDispatch()
-    const imgSettings = useAppSelector(state => state.settings.image)
-    const schemaImage = useAppSelector(state => state.schemaImage)
+    const schemaImage = useSchemaImageStore(state => state.list)
 
-    const [formValues, setFormValues] = useState<ImageSettings>({
-        prompt: imgSettings?.prompt || "",
-        model: imgSettings?.model || 3,
-        hairColor: imgSettings?.hairColor || "Brown",
-        gender: imgSettings?.gender || 'female',
-        age: imgSettings?.age || 20,
-        eyeColor: imgSettings?.eyeColor || "Brown",
-        ethnicGroup: imgSettings?.ethnicGroup || "Caucasian",
-        dancer: imgSettings?.dancer || "Ballet dancer",
-        background: imgSettings?.background || "Stage",
-        hairStyle: imgSettings?.hairStyle || "Straight",
-        hairLength: imgSettings?.hairLength || "Medium",
-    })
+    const formValues = useSettingsStore(state => state?.image)
+    const setSettings = useSettingsStore(state => state.updateSettings)
 
     const updateForm = (key: string, value: string) => {
         const newFormValues = { ...formValues, [key]: value }
         const newPrompt = `A ${
             newFormValues.age}-year-old ${
             newFormValues.gender} ${
-            newFormValues.ethnicGroup} ${newFormValues.dancer} with ${
+            newFormValues.ethnicGroup} ${
+            newFormValues.dancer} with ${
             newFormValues.hairLength} ${
             newFormValues.hairColor} ${
             newFormValues.hairStyle} hair and ${
             newFormValues.eyeColor} eyes, standing in front of a ${
             newFormValues.background}.`;
             
-        setFormValues({ ...newFormValues, prompt: newPrompt })
+        setSettings({...newFormValues, prompt: newPrompt})
     }
 
-    const handleCreatePrompt = () => {
-        dispatch(setImageSettings(formValues))
-        generate(formValues.prompt , formValues.model)
-    }
+    const handleCreatePrompt = () => generate(formValues.prompt , formValues.model)
 
     return (
         <div className="flex flex-col gap-4" >
@@ -102,7 +86,7 @@ export const SettingsForm = ({ generate }: SettingsProps) => {
             { window.location.href.includes('prompt') &&
                 <textarea
                     value={formValues.prompt}
-                    onChange={e => setFormValues({ ...formValues, prompt: e.target.value })}
+                    onChange={e => setSettings({ ...formValues, prompt: e.target.value })}
                     placeholder="Prompt"
                     className="w-full h-20 p-2 bg-blue-100"
                 />
