@@ -3,7 +3,7 @@ import { FiFilter, FiSearch } from 'react-icons/fi'
 import style from './FormSearchInput.module.css'
 import { Drawer } from './Drawer'
 import { useAppDispatch, useAppSelector } from '@/store'
-import { toogleSidesheet } from '@/store/settingsSlice'
+import { useSettingsStore } from '@/store/useSettingsStore'
 
 interface FormInputProps {
     onSubmit: (text: string) => void
@@ -27,8 +27,8 @@ export const FormSearchInput = ({
     onChange
 }: FormInputProps) => {
 
-    const dispatch = useAppDispatch()
-    const isOpen = useAppSelector(state => state.settings.openSidesheet)
+    const isOpen = useSettingsStore(state => state.openSidesheet)
+    const toogleSidesheet = useSettingsStore(state => state.toogleSidesheet)
 
     return <div className={style.formContainer}>
         <form
@@ -54,7 +54,7 @@ export const FormSearchInput = ({
                 </button>
             </div>
         </form>
-        {filterContent && <div onClick={() => dispatch(toogleSidesheet(true))} className={style.buttonFilter} ><FiFilter className='size-5' /></div>}
-        {isOpen && <Drawer title={filterTitle} onClose={() => dispatch(toogleSidesheet(false))}>{filterContent}</Drawer>}
+        {filterContent && <div onClick={() => toogleSidesheet(true)} className={style.buttonFilter} ><FiFilter className='size-5' /></div>}
+        {isOpen && <Drawer title={filterTitle} onClose={() => toogleSidesheet(false)}>{filterContent}</Drawer>}
     </div>
 }
