@@ -20,6 +20,7 @@ interface Props {
     options: { value: any, label: any }[]
     defaultValue?: any;
     showReset?: boolean;
+    label?: string;
 }
 
 const Option = ({ value, label, onClick, isSelected }: OptionProps) => {
@@ -50,7 +51,7 @@ const SelectList = ({ children }: SelectProps) => {
     );
 }
 
-export const Select = ({ onChange, value, options = [], showReset, defaultValue }: Props) => {
+export const Select = ({ onChange, value, options = [], showReset, defaultValue, label }: Props) => {
     const [search, setSearch] = useState('');
     const [isOpen, setIsOpen] = useState(false);
 
@@ -66,6 +67,7 @@ export const Select = ({ onChange, value, options = [], showReset, defaultValue 
 
     return (
         <div className='relative w-full m-auto mb-3 '>
+            {label && <h5>{label}</h5>}
             <input
                 type="text"
                 value={isOpen ? search : getLabelByValue(value)}

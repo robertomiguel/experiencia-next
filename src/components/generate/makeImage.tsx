@@ -4,7 +4,6 @@
 import { useEffect, useState } from "react"
 import { GenerateAction } from "./generate.action"
 import { GetImageAction } from "./getImage.action"
-import Image from "next/image";
 import style from './makeImage.module.css'
 import { Spinner } from "../common/Spinner";
 import { GenerateRes, ImageItem, ProcessRes } from "@/types/iaDraw";
