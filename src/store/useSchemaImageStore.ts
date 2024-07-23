@@ -1,19 +1,9 @@
-import { ImageSchema, ImageSchemaState } from '@/types/iaDraw';
+import { ImageSchemaState } from '@/types/image';
 import { create } from 'zustand';
 
-const initialState: ImageSchema = {
-    dancerStyles: [],
-    backgrounds: [],
-    hairColors: [],
-    hairStyles: [],
-    hairLengths: [],
-    eyeColors: [],
-    genderList: [],
-    ethnicGroups: [],
-    modelList: [],
-}
-
 export const useSchemaImageStore = create<ImageSchemaState>((set) => ({
-  list: initialState,
-  setSchemaImage: (schemaImage: ImageSchema) => set({ list: schemaImage }),
+  list: [],
+  updateList: (list: string[]) => set({ list }),
+  insertImage: (image: string) => set((state) => ({ list: [image, ...state.list] })),
+  deleteImage: (imageIndex: number) => set((state) => ({ list: state.list.filter((_, i) => i !== imageIndex) })),
 }));

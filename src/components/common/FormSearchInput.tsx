@@ -2,7 +2,6 @@
 import { FiFilter, FiSearch } from 'react-icons/fi'
 import style from './FormSearchInput.module.css'
 import { Drawer } from './Drawer'
-import { useAppDispatch, useAppSelector } from '@/store'
 import { useSettingsStore } from '@/store/useSettingsStore'
 
 interface FormInputProps {
@@ -14,6 +13,7 @@ interface FormInputProps {
     filterTitle?: string
     value: string
     onChange: (t: string) => void
+    fullWidth?: boolean
 }
 
 export const FormSearchInput = ({
@@ -24,13 +24,14 @@ export const FormSearchInput = ({
     filterContent,
     filterTitle,
     value,
-    onChange
+    onChange,
+    fullWidth,
 }: FormInputProps) => {
 
     const isOpen = useSettingsStore(state => state.openSidesheet)
     const toogleSidesheet = useSettingsStore(state => state.toogleSidesheet)
 
-    return <div className={style.formContainer}>
+    return <div className={style.formContainer + (fullWidth ? ' w-full' : ' sm:w-1/2')}>
         <form
             className={style.form}
             onSubmit={e => {
@@ -54,7 +55,19 @@ export const FormSearchInput = ({
                 </button>
             </div>
         </form>
-        {filterContent && <div onClick={() => toogleSidesheet(true)} className={style.buttonFilter} ><FiFilter className='size-5' /></div>}
-        {isOpen && <Drawer title={filterTitle} onClose={() => toogleSidesheet(false)}>{filterContent}</Drawer>}
+        {filterContent &&
+            <div
+                onClick={() => toogleSidesheet(true)}
+                className={style.buttonFilter}
+            >
+                <FiFilter className='size-5' />
+            </div>}
+        {isOpen &&
+            <Drawer
+                title={filterTitle}
+                onClose={() => toogleSidesheet(false)}
+            >
+                {filterContent}
+            </Drawer>}
     </div>
 }

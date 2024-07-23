@@ -4,10 +4,8 @@ export const MainMenu = () => {
 
     const menuItems = [
         { label: 'Home', href: '/home' },
-        { label: 'Wiki', href: '/wiki' },
-        { label: 'IA Draw', href: '/iadraw' },
-        { label: 'Crypto', href: '/crypto' },
-        /* { label: 'Images', href: '/images' }, */
+        { label: 'Chat', href: '/chat' },
+        { label: 'Art', href: '/art' },
     ];
     return (
         <nav className="flex z-20 text-gray-50 bg-blue-800 p-2 pl-4 pr-4 m-3 rounded-full gap-3 sticky top-0">
@@ -15,8 +13,6 @@ export const MainMenu = () => {
                 <LinkAction key={item.href} label={item.label}
                     href={item.href} />
             ))}
-            {/* <div className="flex-grow"></div>
-            <LinkAction label='Account' href='/login' /> */}
         </nav>
     );
 }

@@ -1,6 +1,6 @@
 .formContainer {
     @apply sticky top-10 z-20 bg-blue-950 bg-opacity-80 rounded-full p-1;
-    @apply flex flex-row w-full justify-center items-center gap-1 sm:w-1/2 m-auto;
+    @apply flex flex-row justify-center items-center gap-1 m-auto;
 }
 
 .form {
