@@ -6,19 +6,31 @@ import {artGet} from "./artGet";
 import { artGetSD15 } from "./artGetSD15";
 import { CropImagen } from "./imagen/CropImage";
 import Image from "next/image";
+import { useImageStore } from "@/store/useSchemaImageStore";
 
 export const ArtForm = () => {
 
-    const [imgData, setImgData] = useState<any[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [prompt, setPrompt] = useState<string>('');
-    const [refImage, setRefImage ] = useState<string>('')
+    const {
+        list: imageList,
+        insertImage,
+        clearList,
+        isLoading,
+        setIsLoading,
+        prompt,
+        setPrompt,
+        refImage,
+        setRefImage
+    } = useImageStore(state => ({
+        ...state,
+        list: state.list,
+    }));
+
     const [showLoadImg, setShowLoadImg] = useState<boolean>(false);
 
     const handleSubmit = async () => {
         try {
             const i: any = await artGet({ prompt, faceData: refImage });
-            setImgData(prev => [i.image, ...prev]);
+            insertImage(i.image);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -27,7 +39,7 @@ export const ArtForm = () => {
     const handleSubmit2 = async () => {
         try {
             const i: any = await artGetSD15({ prompt, faceData: refImage });
-            setImgData(prev => [i.url, ...prev ]);
+            insertImage(i.url);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -80,10 +92,10 @@ export const ArtForm = () => {
                         setIsLoading(false);
                     }
                 }} >Realistic</button>
-                <button className="w-fit" onClick={() => setImgData([])} >Clear</button>
+                <button className="w-fit" onClick={() => clearList()} >Clear</button>
             </div>
             <div className="flex justify-center items-center p-2 flex-wrap gap-2" >
-                {imgData.map((i, idx) => (
+                {imageList.map((i, idx) => (
                     <Image
                         key={idx}
                         src={i}

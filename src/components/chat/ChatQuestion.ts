@@ -3,11 +3,10 @@ import axios from 'axios';
 
 interface ChatProps {
   chatHistory: any[]
-  model?: number | null
   chatRole: string
 }
 
-export const ChatQuestion = async ({ chatHistory, model, chatRole }: ChatProps ) => {
+export const ChatQuestion = async ({ chatHistory, chatRole }: ChatProps ) => {
 
     const data: any = {
       chatGPTParams: {
@@ -22,8 +21,6 @@ export const ChatQuestion = async ({ chatHistory, model, chatRole }: ChatProps )
         top_p: null
       }
     };
-
-    if (model === 4) data.chatGPTParams.model = "gpt-4o-2024-05-13";
 
     const config = {
       method: 'post',

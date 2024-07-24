@@ -54,7 +54,7 @@ export const artGetSD15 = async ({prompt, faceData}: {prompt: string, faceData?:
         })
     
         return {
-          url: await getImage(res.data.url),
+          url: res.data?.url ? await getImage(res.data.url) : '',
         }
     } catch (error) {
         console.error('Error:', error)

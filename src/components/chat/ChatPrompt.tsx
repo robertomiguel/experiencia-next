@@ -6,6 +6,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { FormSearchInput } from "../common/FormSearchInput";
 import { ChatOptions } from "./ChatOptions";
+import { useSettingsStore } from "@/store/useSettingsStore";
 
 export interface ChatHistory {
     role: "user" | "assistant";
@@ -13,16 +14,21 @@ export interface ChatHistory {
 }
 
 export const ChatPrompt = () => {
-    const [answerList, setAnswerList] = useState<string[]>([]);
+    const {
+        chatList: answerList,
+        chatRole,
+        chatHistory,
+        setChatList: setAnswerList,
+        setChatRole,
+        setChatHistory
+    } = useSettingsStore(state => state);
+
     const [question, setQuestion] = useState('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [chatHistory, setChatHistory] = useState<ChatHistory[]>([]);
-    const [chatModel, setChatModel] = useState<number | null>(4);
-    const [chatRole, setChatRole] = useState<string>('');
 
     const sendQuestion = async () => {
         const user: ChatHistory = { role: "user", content: question };
-        const res = await ChatQuestion({ chatHistory: [...chatHistory, user], model: chatModel, chatRole });
+        const res = await ChatQuestion({ chatHistory: [...chatHistory, user], chatRole });
         setIsLoading(false);
 
         const messages: any[] = res.origen || [];
@@ -39,9 +45,7 @@ export const ChatPrompt = () => {
 
         setIsLoading(false);
         setAnswerList([combinedMessage, ...answerList]);
-        setChatHistory(prev => (
-            [...prev, user, { role: "assistant", content: combinedMessage }]
-        ));        
+        setChatHistory([...chatHistory, user, { role: "assistant", content: combinedMessage }]);
     };
 
     const copyToClipboard = (id: string, e: any) => {
@@ -81,14 +85,13 @@ export const ChatPrompt = () => {
                 fullWidth
                 filterContent={
                     <ChatOptions
-                        value={{ chatModel, chatRole }}
+                        value={{ chatRole }}
                         onChange={(val: any) => {
-                            setChatModel(val.chatModel);
                             setChatRole(val.chatRole);
                         }}
                     />
                 }
-                filterTitle="chat options"
+                filterTitle="Chat options"
             />
             <div className="flex flex-col gap-2 mt-2">
                 {answerList.map((text, i) => {
