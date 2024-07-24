@@ -34,18 +34,31 @@ export const ChatQuestion = async ({ chatHistory, model, chatRole }: ChatProps )
         'sec-fetch-mode': 'cors',
         'sec-fetch-site': 'same-origin',
       },
-      data: JSON.stringify(data)
+      data
     };
 
     try {
         const res = await axios(config)
+
+    const lines: any[] = res.data.split('\n').filter((line: any) => line.trim() !== '');
+    const messages: any = [];
+
+    lines.forEach(line => {
+      try {
+        const parsedLine = JSON.parse(line.replace('data: ', ''));
+        messages.push(parsedLine);
+      } catch {
+        // Ignorar las líneas que no son JSON válidos
+      }
+    });
+
         return {
-            origen: res.data,
+            origen: messages,
         }
     } catch (error) {
         console.error('Error:', error)
         return {
-            origen: ''
+            origen: []
         }
         
     }

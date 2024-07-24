@@ -8,22 +8,9 @@ import { FormSearchInput } from "../common/FormSearchInput";
 import { ChatOptions } from "./ChatOptions";
 
 export interface ChatHistory {
-    role: "user" | "assistant"
-    content: string
+    role: "user" | "assistant";
+    content: string;
 }
-
-const parseResChatData = (data: any) => {
-    let text = "";
-
-    data.forEach((item: any) => {
-        if (item) {
-            let parsedItem = JSON.parse(item.replace("data: ", ""));
-            text += parsedItem.text;
-        }
-    });
-
-    return text;
-};
 
 export const ChatPrompt = () => {
     const [answerList, setAnswerList] = useState<string[]>([]);
@@ -34,14 +21,28 @@ export const ChatPrompt = () => {
     const [chatRole, setChatRole] = useState<string>('');
 
     const sendQuestion = async () => {
-        const user: ChatHistory = { role: "user", content: question }
-        const res = await ChatQuestion({chatHistory: [...chatHistory, user], model: chatModel, chatRole});
+        const user: ChatHistory = { role: "user", content: question };
+        const res = await ChatQuestion({ chatHistory: [...chatHistory, user], model: chatModel, chatRole });
         setIsLoading(false);
-        setAnswerList([parseResChatData(res.origen.split('\n')), ...answerList]);
+
+        const messages: any[] = res.origen || [];
+        let combinedMessage = '';
+
+        messages.forEach(message => {
+            const choices: any[] = message.choices || [];
+            choices.forEach(choice => {
+                if (choice.delta && choice.delta.content) {
+                    combinedMessage += choice.delta.content;
+                }
+            });
+        });
+
+        setIsLoading(false);
+        setAnswerList([combinedMessage, ...answerList]);
         setChatHistory(prev => (
-            [...prev, user, { role: "assistant", content: parseResChatData(res.origen.split('\n')) }]
-        ));
-    }
+            [...prev, user, { role: "assistant", content: combinedMessage }]
+        ));        
+    };
 
     const copyToClipboard = (id: string, e: any) => {
         e.preventDefault();
