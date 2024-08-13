@@ -16,6 +16,34 @@ const seed = Date.now() % 1000000000;
 
 const data: any = {
     job: {
+      name: "multi-ipa-light",
+      data: {
+        seed,
+        prompt,
+        guidance_scale: 1,
+        width: 1024,
+        height: 1024,
+        num_inference_steps: 4,
+        init_image: null,
+        init_image_strength: 0.2,
+        scribble_guidance_scale: 0,
+        scribble_guidance_image: null,
+        model_name: "sdxl-lightning",
+        return_binary: true,
+        image_format: "jpeg",
+        ipa_data: [],
+        negative_prompt: "bad skin tone, bad anatomy, bad lighting, bad composition, bad perspective, bad color, bad contrast, bad focus, bad framing, bad exposure, bad saturation, bad shadows, bad highlights, bad texture, bad details, bad realism, bad quality, bad resolution, bad noise, bad blur, bad grain, bad artifacts, bad distortion",
+        do_upres: false,
+        do_upscale: false
+      },
+      alias: "composer-image"
+    },
+    environment: null,
+    browserToken: [...Array(20)].map(() => Math.random().toString(36)[2]).join(''),
+  };
+
+/* const data: any = {
+    job: {
         name: "sd-lightning",
         data: {
             seed,
@@ -42,7 +70,7 @@ const data: any = {
     },
     environment: null,
     browserToken: [...Array(20)].map(() => Math.random().toString(36)[2]).join(''),
-};
+}; */
 
 if (faceData) {
     data.job.data.reference_images = [
