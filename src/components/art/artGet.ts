@@ -10,6 +10,7 @@ const headers = {
     'content-type': 'application/json',
     'sec-fetch-mode': 'cors',
     'sec-fetch-site': 'same-origin',
+    'cookie': 'connect.sid=s%3AVXAJbzza810w6bwVT6IPgjMLZUvsWOkk.WeuYpE2aPNifjrsops8buVspdmQGxpJrD0lF7v1mSbw;',
 };
 
 const seed = Date.now() % 1000000000;
