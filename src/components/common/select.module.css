@@ -1,17 +1,17 @@
 .select {
-    @apply absolute z-10 overflow-hidden overflow-y-scroll w-full p-2 bg-white max-h-60;
-    @apply shadow-lg rounded-lg;
+  @apply absolute z-10 overflow-hidden overflow-y-scroll w-full p-2 bg-white max-h-60;
+  @apply shadow-lg rounded-lg;
 }
 
 .option {
-    @apply text-blue-950 w-full hover:cursor-pointer hover:bg-blue-200 p-2;
-    @apply rounded-md;
+  @apply text-blue-950 w-full hover:cursor-pointer hover:bg-blue-200 p-2;
+  @apply rounded-md;
 }
 
 .optionSelected {
-    @apply bg-blue-700 text-gray-50 hover:text-blue-950;
+  @apply bg-blue-700 text-gray-50 hover:text-blue-950;
 }
 
 .resetButton {
-    @apply w-fit bottom-0 hover:bg-blue-200 bg-gray-50 text-blue-900 absolute right-0 m-0 rounded-full p-3;
+  @apply w-fit bottom-0 hover:bg-blue-200 bg-gray-50 text-blue-900 absolute right-0 m-0 rounded-full p-3;
 }
