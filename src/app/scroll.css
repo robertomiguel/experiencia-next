@@ -2,20 +2,20 @@
 
 /* Barra del scroll */
 ::-webkit-scrollbar {
-    @apply w-2;
+  @apply w-2;
 }
 
 /* Track (la parte de fondo detrás del thumb) */
 ::-webkit-scrollbar-track {
-    @apply bg-blue-300 mt-2 mb-2 rounded-full;
+  @apply bg-blue-300 mt-2 mb-2 rounded-full;
 }
 
 /* Thumb (la parte móvil del scroll) */
 ::-webkit-scrollbar-thumb {
-    @apply bg-blue-800 rounded-full;
+  @apply bg-blue-800 rounded-full;
 }
 
 /* Hover sobre el thumb */
 ::-webkit-scrollbar-thumb:hover {
-    @apply bg-blue-600;
+  @apply bg-blue-600;
 }

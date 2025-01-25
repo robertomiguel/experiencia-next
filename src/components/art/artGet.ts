@@ -1,21 +1,27 @@
-'use server'
-import axios from 'axios';
+"use server";
+import axios from "axios";
 
-export const artGet = async ({prompt, faceData}: {prompt: string, faceData?: string}) => {
+export const artGet = async ({
+  prompt,
+  faceData,
+}: {
+  prompt: string;
+  faceData?: string;
+}) => {
+  const url = process.env.PRIVATE_IMG_IA || "";
 
-const url = process.env.PRIVATE_IMG_IA || ''
+  const headers = {
+    accept: "application/json",
+    "content-type": "application/json",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    cookie:
+      "connect.sid=s%3AVXAJbzza810w6bwVT6IPgjMLZUvsWOkk.WeuYpE2aPNifjrsops8buVspdmQGxpJrD0lF7v1mSbw;",
+  };
 
-const headers = {
-    'accept': 'application/json',
-    'content-type': 'application/json',
-    'sec-fetch-mode': 'cors',
-    'sec-fetch-site': 'same-origin',
-    'cookie': 'connect.sid=s%3AVXAJbzza810w6bwVT6IPgjMLZUvsWOkk.WeuYpE2aPNifjrsops8buVspdmQGxpJrD0lF7v1mSbw;',
-};
+  const seed = Date.now() % 1000000000;
 
-const seed = Date.now() % 1000000000;
-
-const data: any = {
+  const data: any = {
     job: {
       name: "multi-ipa-light",
       data: {
@@ -33,17 +39,20 @@ const data: any = {
         return_binary: true,
         image_format: "jpeg",
         ipa_data: [],
-        negative_prompt: "bad skin tone, bad anatomy, bad lighting, bad composition, bad perspective, bad color, bad contrast, bad focus, bad framing, bad exposure, bad saturation, bad shadows, bad highlights, bad texture, bad details, bad realism, bad quality, bad resolution, bad noise, bad blur, bad grain, bad artifacts, bad distortion",
+        negative_prompt:
+          "bad skin tone, bad anatomy, bad lighting, bad composition, bad perspective, bad color, bad contrast, bad focus, bad framing, bad exposure, bad saturation, bad shadows, bad highlights, bad texture, bad details, bad realism, bad quality, bad resolution, bad noise, bad blur, bad grain, bad artifacts, bad distortion",
         do_upres: false,
-        do_upscale: false
+        do_upscale: false,
       },
-      alias: "composer-image"
+      alias: "composer-image",
     },
     environment: null,
-    browserToken: [...Array(20)].map(() => Math.random().toString(36)[2]).join(''),
+    browserToken: [...Array(20)]
+      .map(() => Math.random().toString(36)[2])
+      .join(""),
   };
 
-/* const data: any = {
+  /* const data: any = {
     job: {
         name: "sd-lightning",
         data: {
@@ -73,23 +82,25 @@ const data: any = {
     browserToken: [...Array(20)].map(() => Math.random().toString(36)[2]).join(''),
 }; */
 
-if (faceData) {
+  if (faceData) {
     data.job.data.reference_images = [
-        {
-            data: faceData,
-            weight: 1,
-            referenceType: "face"
-        },
-    ]
-}
-
-try {
-    const response = await axios.post(url, data, { headers: headers, responseType: 'arraybuffer' });
-    const base64Image = `data:image/png;base64,${Buffer.from(response.data).toString('base64')}`;
-    return { image: base64Image, seed, prompt };
-  } catch (error) {
-    console.error('Error fetching image:', error);
-    return { image: '' };
+      {
+        data: faceData,
+        weight: 1,
+        referenceType: "face",
+      },
+    ];
   }
 
-}
+  try {
+    const response = await axios.post(url, data, {
+      headers: headers,
+      responseType: "arraybuffer",
+    });
+    const base64Image = `data:image/png;base64,${Buffer.from(response.data).toString("base64")}`;
+    return { image: base64Image, seed, prompt };
+  } catch (error) {
+    console.error("Error fetching image:", error);
+    return { image: "" };
+  }
+};

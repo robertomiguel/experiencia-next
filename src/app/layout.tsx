@@ -22,10 +22,14 @@ export default function RootLayout({
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
       />
       <body className={inter.className}>
-          <MainMenu />
-          {children}
-        <div className="fixed right-2 p-2 bottom-0 bg-gray-700 bg-opacity-50 rounded-full underline " >
-          <a href="https://www.linkedin.com/in/roberto-miguel-costi-b1450292/" target="_blank" rel="noreferrer">
+        <MainMenu />
+        {children}
+        <div className="fixed right-2 p-2 bottom-0 bg-gray-700 bg-opacity-50 rounded-full underline ">
+          <a
+            href="https://www.linkedin.com/in/roberto-miguel-costi-b1450292/"
+            target="_blank"
+            rel="noreferrer"
+          >
             by Roberto Miguel ®
           </a>
         </div>

@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import './scroll.css';
+@import "./scroll.css";
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -19,7 +19,7 @@
  */
 body {
   @apply bg-blue-950 text-gray-50;
-  letter-spacing: .06em;
+  letter-spacing: 0.06em;
 }
 
 @layer utilities {
@@ -32,7 +32,7 @@ h1 {
   display: inline-block;
   font-size: 1.8rem;
   letter-spacing: 0.08em;
-  margin: .5rem;
+  margin: 0.5rem;
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
 
@@ -40,21 +40,21 @@ h2 {
   display: inline-block;
   font-size: 1.55rem;
   letter-spacing: 0.08em;
-  margin: .5rem;
+  margin: 0.5rem;
 }
 
 h3 {
   display: inline-block;
   font-size: 1.3em;
   letter-spacing: 0.08em;
-  margin: .5rem;
+  margin: 0.5rem;
 }
 
 h4 {
   display: inline-block;
   font-size: 1.3rem;
   letter-spacing: 0.08em;
-  margin: .5rem;
+  margin: 0.5rem;
   font-weight: 400;
 }
 
@@ -62,14 +62,14 @@ h5 {
   display: inline-block;
   font-size: 1rem;
   letter-spacing: 0.08em;
-  margin: .5rem;
+  margin: 0.5rem;
 }
 
 h6 {
   display: inline-block;
   font-size: 1rem;
   letter-spacing: 0.08em;
-  margin: .5rem;
+  margin: 0.5rem;
   font-weight: 400;
 }
 
@@ -107,10 +107,10 @@ textarea:disabled {
   @apply bg-gray-200;
 }
 
-input[type='checkbox'] {
+input[type="checkbox"] {
   @apply bg-gray-50 text-blue-950;
 }
 
-input[type='checkbox']:disabled {
+input[type="checkbox"]:disabled {
   @apply bg-gray-200;
 }
