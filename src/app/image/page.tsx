@@ -1,7 +1,12 @@
 'use client'
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { removeBackground, preload } from "@imgly/background-removal";
+
+// Definimos un tipo para las funciones que vamos a importar dinámicamente
+type BackgroundRemovalType = {
+  removeBackground: (image: string, config?: any) => Promise<Blob>;
+  preload: (config?: any) => Promise<void>;
+};
 
 export default function ImagePage() {
   const [image, setImage] = useState<string | null>(null);
@@ -11,11 +16,25 @@ export default function ImagePage() {
   const [gpuTier, setGpuTier] = useState<"high" | "medium" | "low" | null>(
     null
   );
+  const [backgroundRemoval, setBackgroundRemoval] =
+    useState<BackgroundRemovalType | null>(null);
 
-  // Función para detectar capacidades GPU de manera más precisa
+  // Función para cargar la biblioteca de manera dinámica
+  const loadBackgroundRemoval = async () => {
+    try {
+      const bgRemovalLib = await import("@imgly/background-removal");
+      setBackgroundRemoval({
+        removeBackground: bgRemovalLib.removeBackground,
+        preload: bgRemovalLib.preload,
+      });
+    } catch (error) {
+      console.error("Error loading background removal module:", error);
+      setError("Error al cargar el módulo de eliminación de fondo");
+    }
+  };
+
   const detectGPUCapabilities = async () => {
     try {
-      // Verificar WebGPU
       if (typeof navigator !== "undefined" && "gpu" in navigator) {
         try {
           const adapter = await (navigator as any).gpu?.requestAdapter();
@@ -28,7 +47,6 @@ export default function ImagePage() {
         }
       }
 
-      // Verificar WebGL como fallback
       const canvas = document.createElement("canvas");
       const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
 
@@ -38,7 +56,6 @@ export default function ImagePage() {
           ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
           : "";
 
-        // Detectar GPUs potentes basado en el renderer string
         const isHighEnd = /(nvidia|radeon\s*rx|rtx)/i.test(renderer);
         setGpuTier(isHighEnd ? "high" : "medium");
         return isHighEnd ? "high" : "medium";
@@ -62,6 +79,11 @@ export default function ImagePage() {
       return;
     }
 
+    if (!backgroundRemoval) {
+      setError("El módulo de eliminación de fondo no está listo");
+      return;
+    }
+
     const reader = new FileReader();
 
     reader.onload = async () => {
@@ -70,8 +92,7 @@ export default function ImagePage() {
         setError(null);
         setImage(reader.result as string);
 
-        // Configuración optimizada según las capacidades detectadas
-        const config: any = {
+        const config = {
           debug: true,
           device: gpuTier === "high" ? "gpu" : "cpu",
           model: gpuTier === "low" ? "small" : "medium",
@@ -82,8 +103,10 @@ export default function ImagePage() {
           },
         };
 
-        // Remover el fondo
-        const blob = await removeBackground(reader.result as string, config);
+        const blob = await backgroundRemoval.removeBackground(
+          reader.result as string,
+          config
+        );
         const url = URL.createObjectURL(blob);
         setImageRemoved(url);
       } catch (error) {
@@ -101,16 +124,18 @@ export default function ImagePage() {
   useEffect(() => {
     const init = async () => {
       try {
+        await loadBackgroundRemoval();
         const detectedTier = await detectGPUCapabilities();
 
-        // Configuración de preload basada en las capacidades detectadas
-        const settings: any = {
-          debug: false,
-          device: detectedTier === "high" ? "gpu" : "cpu",
-          preferWebGPU: detectedTier === "high",
-          model: detectedTier === "low" ? "small" : "medium",
-        };
-        await preload(settings);
+        if (backgroundRemoval) {
+          const settings = {
+            debug: false,
+            device: detectedTier === "high" ? "gpu" : "cpu",
+            preferWebGPU: detectedTier === "high",
+            model: detectedTier === "low" ? "small" : "medium",
+          };
+          await backgroundRemoval.preload(settings);
+        }
       } catch (error) {
         console.error("Error en la inicialización:", error);
         setError(
@@ -119,7 +144,7 @@ export default function ImagePage() {
       }
     };
     init();
-  }, []);
+  }, [backgroundRemoval]);
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 p-6">
