@@ -5,6 +5,7 @@ export const MainMenu = () => {
     { label: "Home", href: "/home" },
     { label: "Chat", href: "/chat" },
     { label: "Art", href: "/art" },
+    { label: "Image", href: "/image" },
   ];
   return (
     <nav className="flex z-20 text-gray-50 bg-blue-800 p-2 pl-4 pr-4 m-3 rounded-full gap-3 sticky top-0">
