@@ -2,6 +2,9 @@
 import { useEffect, useState } from "react";
 import { ImageBox } from "./imagexBox";
 import { FileBox } from "./fileBox";
+import { detectGPUCapabilities } from "./detectGPUCapabilities";
+import DragSlider from "./dragSlider";
+import { Spinner } from "../common/Spinner";
 
 // Definimos un tipo para las funciones que vamos a importar dinámicamente
 type BackgroundRemovalType = {
@@ -14,9 +17,7 @@ export default function ImagePage() {
   const [imageRemoved, setImageRemoved] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [gpuTier, setGpuTier] = useState<"high" | "medium" | "low" | null>(
-    null
-  );
+  const [config, setConfig] = useState();
   const [backgroundRemoval, setBackgroundRemoval] =
     useState<BackgroundRemovalType | null>(null);
 
@@ -31,43 +32,6 @@ export default function ImagePage() {
     } catch (error) {
       console.error("Error loading background removal module:", error);
       setError("Error al cargar el módulo de eliminación de fondo");
-    }
-  };
-
-  const detectGPUCapabilities = async () => {
-    try {
-      if (typeof navigator !== "undefined" && "gpu" in navigator) {
-        try {
-          const adapter = await (navigator as any).gpu?.requestAdapter();
-          if (adapter) {
-            setGpuTier("high");
-            return "high";
-          }
-        } catch (e) {
-          console.log("WebGPU no disponible, intentando WebGL");
-        }
-      }
-
-      const canvas = document.createElement("canvas");
-      const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
-
-      if (gl) {
-        const debugInfo = (gl as any).getExtension("WEBGL_debug_renderer_info");
-        const renderer = debugInfo
-          ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
-          : "";
-
-        const isHighEnd = /(nvidia|radeon\s*rx|rtx)/i.test(renderer);
-        setGpuTier(isHighEnd ? "high" : "medium");
-        return isHighEnd ? "high" : "medium";
-      }
-
-      setGpuTier("low");
-      return "low";
-    } catch (e) {
-      console.error("Error detectando GPU:", e);
-      setGpuTier("low");
-      return "low";
     }
   };
 
@@ -93,21 +57,11 @@ export default function ImagePage() {
         setError(null);
         setImage(reader.result as string);
 
-        const config = {
-          debug: true,
-          device: gpuTier === "high" ? "gpu" : "cpu",
-          model: gpuTier === "low" ? "small" : "medium",
-          preferWebGPU: gpuTier === "high",
-          output: {
-            format: "image/png",
-            type: "foreground",
-          },
-        };
-
         const blob = await backgroundRemoval.removeBackground(
           reader.result as string,
           config
         );
+
         const url = URL.createObjectURL(blob);
         setImageRemoved(url);
       } catch (error) {
@@ -123,10 +77,23 @@ export default function ImagePage() {
   };
 
   useEffect(() => {
+    console.log("Inicializando...Init");
+
     const init = async () => {
       try {
         await loadBackgroundRemoval();
         const detectedTier = await detectGPUCapabilities();
+        const config: any = {
+          debug: false,
+          device: detectedTier === "high" ? "gpu" : "cpu",
+          model: detectedTier === "low" ? "small" : "medium",
+          preferWebGPU: detectedTier === "high",
+          output: {
+            format: "image/webp",
+            type: "foreground",
+          },
+        };
+        setConfig(config);
 
         if (backgroundRemoval) {
           const settings = {
@@ -145,30 +112,40 @@ export default function ImagePage() {
       }
     };
     init();
-  }, [backgroundRemoval]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 md:px-8 w-full">
       <h1 className="text-[20px] font-bold">Eliminar fondo de imagen</h1>
 
       <div className="w-full bg-blue-800 p-2 md:p-4 rounded-lg shadow-md">
-       
         <FileBox onChange={handleUpload} />
 
         {error && (
           <div className="text-red-600 mb-4 p-3 bg-red-50 rounded">{error}</div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-          
-          <ImageBox image={image} label="Imagen Original" noImage="No hay imagen cargada" />
-
-          <ImageBox
-            image={imageRemoved}
-            label="Imagen con fondo eliminado"
-            noImage="No hay imagen procesada"
-            loading={loading}
-          />
+        <div className="w-full mt-4">
+          {!loading && (
+            <DragSlider
+              redContent={
+                <ImageBox
+                  image={image}
+                  label="Imagen Original"
+                  noImage="No hay imagen cargada"
+                />
+              }
+              yellowContent={
+                <ImageBox
+                  image={imageRemoved}
+                  label="Imagen con fondo eliminado"
+                  noImage="No hay imagen procesada"
+                />
+              }
+            />
+          )}
+          {loading && <Spinner color="border-blue-500" />}
         </div>
       </div>
     </div>
