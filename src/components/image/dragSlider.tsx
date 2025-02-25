@@ -4,16 +4,16 @@ import React, { useState, useRef, useEffect } from "react";
 
 interface DragSliderProps {
   initialPosition?: number;
-  redContent?: any;
-  yellowContent?: any;
+  leftContent?: any;
+  rightContent?: any;
   width?: string;
   height?: string;
 }
 
 const DragSlider: React.FC<DragSliderProps> = ({
   initialPosition = 50,
-  redContent = "DIV ROJO",
-  yellowContent = "DIV AMARILLO",
+  leftContent = "DIV ROJO",
+  rightContent = "DIV AMARILLO",
   width = "w-80",
   height = "h-60",
 }) => {
@@ -89,7 +89,7 @@ const DragSlider: React.FC<DragSliderProps> = ({
       document.removeEventListener("touchmove", touchMoveHandler);
       document.removeEventListener("touchend", touchEndHandler);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -99,14 +99,14 @@ const DragSlider: React.FC<DragSliderProps> = ({
         className={`relative w-[512px] h-[768px] overflow-hidden border-2 m-4 border-blue-800 select-none rounded-lg`}
       >
         {/* Div rojo (fondo) */}
-        <div className="absolute">{redContent}</div>
+        <div className="absolute">{leftContent}</div>
 
         {/* Div amarillo (capa superior) con clip-path dinámico */}
         <div
           className="absolute"
           style={{ clipPath: `inset(0 0 0 ${sliderPosition}%)` }}
         >
-          {yellowContent}
+          {rightContent}
         </div>
 
         {/* Línea vertical y control del slider */}
