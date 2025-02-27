@@ -137,14 +137,14 @@ export default function ImagePage() {
   }, [pasteError, setPasteError]);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 md:px-8 w-full">
+    <div className="flex flex-col items-center justify-center gap-4 px-2 md:px-8 w-full">
       <h1 className="text-[20px] font-bold">Eliminar fondo de imagen</h1>
 
       <div className="w-full bg-blue-800 p-2 md:p-4 rounded-lg shadow-md">
         <FileBox onChange={handleUpload} />
 
         {/* Instrucciones de pegar imagen */}
-        <div className="text-white mt-2 mb-3 text-center border border-blue-300 rounded-lg p-2">
+        <div className="text-white mt-2 text-center border border-blue-300 rounded-lg md:p-2">
           <p>También puedes pegar una imagen directamente (Ctrl+V / Cmd+V)</p>
           {isPasting && (
             <span className="block mt-1">Procesando imagen pegada...</span>
