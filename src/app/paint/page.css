@@ -50,14 +50,13 @@ h1 {
     position: relative;
     margin: 20px 0;
     overflow: hidden;
-    background-color: yellow;
+    background-color: rgb(255, 255, 222);
     padding: 10px;
     border-radius: 5px;
 }
 
 #canvas {
     border: 1px solid #ddd;
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAA+SURBVHjaYvz//z8DJYCJgUIwasCoAaMGDBgwasDwM4ABAAe7v2yM7OgeAAAAAElFTkSuQmCC');
     background-repeat: repeat;
     cursor: none;
 }

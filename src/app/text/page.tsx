@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Canvas, FabricText, FabricImage } from "fabric";
+import useCanvasTrim from "@/components/common/useCanvasTrim";
 
 export default function Page() {
   const canvasRef = useRef(null);
@@ -80,25 +81,37 @@ export default function Page() {
     canvas.renderAll();
   };
 
+  const { trimCanvas } = useCanvasTrim();
+
   // carga de imágenes desdel input file
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !e.target.files[0]) return;
+
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = (e) => {
+      const newCanvas = document.createElement("canvas");
+      const ctx = newCanvas.getContext("2d");
       const img = new Image();
       img.src = e.target?.result as string;
-
       img.onload = () => {
-        const fabricImage = new FabricImage(img, {
-          left: 10,
-          top: 10,
-        });
+        newCanvas.width = img.width;
+        newCanvas.height = img.height;
+        ctx?.drawImage(img, 0, 0);
 
-        fabricCanvasRef.current?.add(fabricImage);
-        fabricCanvasRef.current?.sendObjectToBack(fabricImage);
-        fabricCanvasRef.current?.renderAll();
+        const trimed = trimCanvas(newCanvas);
+        img.src = trimed?.toDataURL() as string;
+        img.onload = () => {
+          const fabricImage = new FabricImage(img, {
+            left: 10,
+            top: 10,
+          });
+
+          fabricCanvasRef.current?.add(fabricImage);
+          fabricCanvasRef.current?.sendObjectToBack(fabricImage);
+          fabricCanvasRef.current?.renderAll();
+        };
       };
     };
 
@@ -135,30 +148,32 @@ export default function Page() {
       <canvas ref={canvasRef} />
       <input type="file" onChange={handleImageUpload} />
       <textarea value={text} onChange={(e) => setText(e.target.value)} />
-      <button
-        onClick={() => {
-          if (objSelected && objSelected?.length > 0) {
-            objSelected.forEach((obj) => {
-              if (obj.type !== "text") return;
-              obj.set("text", text);
-              obj.set(
-                "fill",
-                `#${Math.floor(Math.random() * 16777215).toString(16)}`
-              );
-              obj.set("textAlign", "center");
-            });
-            fabricCanvasRef.current?.renderAll();
-            return;
-          }
-          addText(text);
-        }}
-      >
-        Aplicar texto
-      </button>
-      <button onClick={switchBackGroundColor}>Color de fondo</button>
-      {objSelected.length > 0 && (
-        <button onClick={addShadowToText}>Sombra</button>
-      )}
+      <div className="flex flex-row gap-2 w-full">
+        <button
+          onClick={() => {
+            if (objSelected && objSelected?.length > 0) {
+              objSelected.forEach((obj) => {
+                if (obj.type !== "text") return;
+                obj.set("text", text);
+                obj.set(
+                  "fill",
+                  `#${Math.floor(Math.random() * 16777215).toString(16)}`
+                );
+                obj.set("textAlign", "center");
+              });
+              fabricCanvasRef.current?.renderAll();
+              return;
+            }
+            addText(text);
+          }}
+        >
+          Aplicar texto
+        </button>
+        <button onClick={switchBackGroundColor}>Color de fondo</button>
+        {objSelected.length > 0 && (
+          <button onClick={addShadowToText}>Sombra</button>
+        )}
+      </div>
     </div>
   );
 }
