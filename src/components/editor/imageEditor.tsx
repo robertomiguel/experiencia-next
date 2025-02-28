@@ -11,7 +11,7 @@ import React, {
 import { Download, Upload, Edit, X } from "lucide-react";
 import { sliderDefinitions, StyleState } from "./sliderDefinitions";
 import { RenderSection } from "./renderSection";
-
+import useCanvasTrim from "../common/useCanvasTrim";
 
 const STYLE_BASE = {
   shadowEnabled: true,
@@ -27,7 +27,7 @@ const STYLE_BASE = {
   whites: 0,
   blacks: 0,
   clarity: 0,
-}
+};
 
 export const ImageEditor: React.FC = () => {
   const [img, setImg] = useState<HTMLImageElement | null>(null);
@@ -45,7 +45,7 @@ export const ImageEditor: React.FC = () => {
     },
     []
   );
-  
+
   const renderShadow = useCallback(() => {
     if (!img || !canvasRef.current) return;
 
@@ -121,14 +121,17 @@ export const ImageEditor: React.FC = () => {
     reader.readAsDataURL(file);
   }, []);
 
-  const handleDownload = useCallback(() => {
-    if (!imgShadow) return;
+  const { downloadTrimmedImage } = useCanvasTrim();
 
-    const link = document.createElement("a");
+  const handleDownload = () => {
+    if (!canvasRef?.current) return;
+    downloadTrimmedImage(canvasRef.current, "imagen_editada.webp");
+
+    /* const link = document.createElement("a");
     link.href = imgShadow;
     link.download = "imagen_con_sombra.png";
-    link.click();
-  }, [imgShadow]);
+    link.click(); */
+  };
 
   const getFilters = useMemo(() => {
     const {

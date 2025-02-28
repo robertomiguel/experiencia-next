@@ -6,6 +6,7 @@ import { detectGPUCapabilities } from "./detectGPUCapabilities";
 import DragSlider from "./dragSlider";
 import { Spinner } from "../common/Spinner";
 import usePasteImage from "./usePasteImage"; // Importamos nuestro nuevo hook
+import useCanvasTrim from "../common/useCanvasTrim";
 
 // Definimos un tipo para las funciones que vamos a importar dinámicamente
 type BackgroundRemovalType = {
@@ -21,6 +22,8 @@ export default function ImagePage() {
   const [config, setConfig] = useState();
   const [backgroundRemoval, setBackgroundRemoval] =
     useState<BackgroundRemovalType | null>(null);
+
+  const { downloadTrimmedImage } = useCanvasTrim();
 
   // Función para procesar una imagen (tanto subida como pegada)
   const processImage = async (imageData: string) => {
@@ -89,8 +92,6 @@ export default function ImagePage() {
   };
 
   useEffect(() => {
-    console.log("Inicializando...Init");
-
     const init = async () => {
       try {
         await loadBackgroundRemoval();
@@ -175,6 +176,28 @@ export default function ImagePage() {
             />
           )}
           {(loading || isPasting) && <Spinner color="border-blue-500" />}
+
+          {imageRemoved && (
+            <div>
+              <button
+                onClick={() => {
+                  // cargar en un canvas antes de descargar
+                  const canvas = document.createElement("canvas");
+                  const ctx = canvas.getContext("2d");
+                  const img = new Image();
+                  img.src = imageRemoved!;
+                  img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx?.drawImage(img, 0, 0);
+                    downloadTrimmedImage(canvas, "imagen_sin_fondo.webp");
+                  };
+                }}
+              >
+                Descargar
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

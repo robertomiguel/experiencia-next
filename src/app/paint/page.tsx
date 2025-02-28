@@ -3,6 +3,7 @@ import "./page.css";
 
 import React, { useEffect, useRef, useState } from "react";
 import { Eraser, RotateCcw, Trash2, Save, Undo, Redo } from "lucide-react";
+import useCanvasTrim from "@/components/common/useCanvasTrim";
 
 const ImageEditor: React.FC = () => {
   // Referencias a los elementos DOM
@@ -421,14 +422,12 @@ const ImageEditor: React.FC = () => {
     }
   };
 
+  const { downloadTrimmedImage } = useCanvasTrim();
+
   // Botón para guardar
   const handleSaveClick = () => {
     if (!canvasRef.current) return;
-
-    const link = document.createElement("a");
-    link.download = "imagen_editada.png";
-    link.href = canvasRef.current.toDataURL("image/png");
-    link.click();
+    downloadTrimmedImage(canvasRef.current);
     setStatus("Imagen guardada correctamente.");
   };
 
@@ -578,8 +577,8 @@ const ImageEditor: React.FC = () => {
         <canvas
           id="canvas"
           ref={canvasRef}
-          width="800"
-          height="600"
+          width="512"
+          height="678"
           onMouseDown={startDrawing}
           onMouseMove={handleCanvasMouseMove}
           onMouseUp={stopDrawing}
