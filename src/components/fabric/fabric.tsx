@@ -1,21 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFabricScript } from "./hooks/useFabricScript";
 import Trash from "./trash";
+import { CanvasMenu } from "./canvasMenu";
+import { sendTextToFront } from "./commons/sendTextToFront";
+
+export const DEFAULT_BACKGROUND_COLOR = "#f3f3f3";
+const DEFAULT_CANVAS_WIDTH = 600;
+const DEFAULT_CANVAS_HEIGHT = 400;
 
 export const Fabric = ({ isMobile }: { isMobile: boolean }) => {
-  const [objSelected, setObjSelected] = useState<any>(null);
-  const [showTrashBin, setShowTrashBin] = useState(false);
+  const [objSelected, setObjSelected] = useState<any>(null); // Objeto seleccionado
+  const [showTrashBin, setShowTrashBin] = useState(false); // Mostrar/ocultar el tacho
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const inputFileRef = useRef<HTMLInputElement>(null);
-  const fabricCanvasRef = useRef<any>(null);
-  const isMovingRef = useRef(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null); // canvas para dibujar en pantalla
+  const fabricCanvasRef = useRef<any>(null); // canvas del script
+  const isMovingRef = useRef(false); // requerido para mostrar/ocultar el tacho
 
-  const isFabricLoaded = useFabricScript();
+  const isFabricLoaded = useFabricScript(); // informa cuando se terminó de cargar el script de fabric
 
-  const cursorPositionRef = useRef({ x: 0, y: 0 });
+  const cursorPositionRef = useRef({ x: 0, y: 0 }); // requerido para eliminar objetos sobre el tacho
 
   useEffect(() => {
     if (!isFabricLoaded || !canvasRef.current || fabricCanvasRef.current)
@@ -24,7 +29,7 @@ export const Fabric = ({ isMobile }: { isMobile: boolean }) => {
     const fabric = (window as any).fabric;
     if (fabric) {
       fabricCanvasRef.current = new fabric.Canvas(canvasRef.current, {
-        backgroundColor: "#f3f3f3",
+        backgroundColor: DEFAULT_BACKGROUND_COLOR,
         selection: false,
         preserveObjectStacking: true,
         centeredScaling: false,
@@ -91,249 +96,46 @@ export const Fabric = ({ isMobile }: { isMobile: boolean }) => {
         fabricCanvasRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFabricLoaded]);
 
-  const addRectangle = useCallback(() => {
-    if (!fabricCanvasRef.current) return;
-
-    const fabric = (window as any).fabric;
-    if (!fabric) return;
-
-    const rect = new fabric.Rect({
-      left: 200,
-      top: 200,
-      fill: "blue",
-      width: 100,
-      height: 100,
-      selectable: true,
-      originX: "center",
-      originY: "center",
-    });
-    rect.setControlsVisibility({
-      mtr: !isMobile, // Rotación según dispositivo
-    });
-
-    fabricCanvasRef.current.add(rect);
-    fabricCanvasRef.current.setActiveObject(rect);
-    fabricCanvasRef.current.renderAll();
-    sendTextToFront();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const addText = useCallback(() => {
-    if (!fabricCanvasRef.current) return;
-
-    const fabric = (window as any).fabric;
-    if (!fabric) return;
-
-    const text = new fabric.Textbox("Hello, Fabric.js!", {
-      left: 200,
-      top: 200,
-      fontSize: 24,
-      fill: "black",
-      selectable: true,
-      originX: "center",
-      originY: "center",
-    });
-    text.setControlsVisibility({
-      mtr: !isMobile, // Rotación según dispositivo
-    });
-    fabricCanvasRef.current.add(text);
-    fabricCanvasRef.current.setActiveObject(text);
-    fabricCanvasRef.current.renderAll();
-  }, []);
-
-  const uploadFile = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target?.result && typeof e.target.result === "string") {
-          addImage(e.target.result);
-        }
-      };
-      reader.readAsDataURL(file);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  const sendTextToFront = useCallback(() => {
-    fabricCanvasRef.current.getObjects().forEach((obj: any) => {
-      if (obj.type === "textbox") {
-        fabricCanvasRef.current.bringToFront(obj);
-      }
-    });
-    fabricCanvasRef.current.renderAll();
-  }, []);
-
-  const addImage = useCallback((imageSrc: string) => {
-    if (!fabricCanvasRef.current) return;
-
-    const fabric = (window as any).fabric;
-    if (!fabric) return;
-
-    const imgElement = new Image();
-    imgElement.src = imageSrc;
-    imgElement.onload = () => {
-      const imgInstance = new fabric.Image(imgElement, {
-        left: fabricCanvasRef.current.width / 2,
-        top: fabricCanvasRef.current.height / 2,
-        originX: "center",
-        originY: "center",
-        selectable: true,
-        perPixelTargetFind: true,
-        targetFindTolerance: 8,
-      });
-
-      let isDoubleClick = false;
-      let lastClickTime = 0;
-
-      fabricCanvasRef.current.on("mouse:down", function () {
-        const currentTime = new Date().getTime();
-        const timeDiff = currentTime - lastClickTime;
-
-        // Detectar si es un clic rápido (menos de 300ms desde el último clic)
-        if (timeDiff < 300) {
-          isDoubleClick = true;
-
-          // Deseleccionar cualquier objeto seleccionado
-          if (fabricCanvasRef.current.getActiveObject()) {
-            fabricCanvasRef.current.discardActiveObject();
-            fabricCanvasRef.current.requestRenderAll();
-          }
-        } else {
-          isDoubleClick = false;
-        }
-
-        lastClickTime = currentTime;
-      });
-
-      imgInstance.setControlsVisibility({
-        mt: false, // Controles medios desactivados
-        mb: false,
-        ml: false,
-        mr: false,
-        tl: true, // Controles de esquina activados
-        tr: true,
-        bl: true,
-        br: true,
-        mtr: !isMobile, // Rotación según dispositivo
-      });
-
-      const scaleX = fabricCanvasRef.current.width / imgInstance.width;
-      const scaleY = fabricCanvasRef.current.height / imgInstance.height;
-      const scale = Math.min(scaleX, scaleY) * 0.8;
-      imgInstance.scale(scale);
-
-      fabricCanvasRef.current.add(imgInstance);
-      fabricCanvasRef.current.setActiveObject(imgInstance);
-      fabricCanvasRef.current.renderAll();
-      sendTextToFront();
-    };
-    imgElement.onerror = () => {
-      console.error("Failed to load image");
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const clearCanvas = useCallback(() => {
-    if (!fabricCanvasRef.current) return;
-
-    fabricCanvasRef.current
-      .getObjects()
-      .forEach((obj: any) => fabricCanvasRef.current.remove(obj));
-    fabricCanvasRef.current.renderAll();
-  }, []);
-
-  const switchBackGroundColor = useCallback(() => {
-    fabricCanvasRef.current?.set(
-      "backgroundColor",
-      `#${Math.floor(Math.random() * 16777215).toString(16)}`
-    );
-    fabricCanvasRef.current?.renderAll();
-  }, []);
-
-  /*
-    var dataURL = canvas.toDataURL({
-        format: 'jpeg',
-        quality: 0.8
-    });
-  */
+  useEffect(() => {
+    if (!objSelected) return;
+    switch (objSelected?.type) {
+      case "rect":
+      case "image":
+        objSelected.bringToFront
+          ? objSelected.bringToFront()
+          : fabricCanvasRef.current.bringToFront(objSelected);
+        sendTextToFront(fabricCanvasRef.current);
+        break;
+      default:
+        break;
+    }
+  }, [objSelected]);
 
   return (
-    <div className="flex flex-col items-center p-4">
+    <div className="flex flex-col items-center">
       {!isFabricLoaded ? (
         <p>Iniciando...</p>
       ) : (
-        <>
-          <input
-            ref={inputFileRef}
-            type="file"
-            accept="image/*"
-            onChange={uploadFile}
-            style={{ display: "none" }}
+        <div className="relative flex flex-col items-center gap-4">
+          <CanvasMenu fabricCanvasRef={fabricCanvasRef} isMobile={isMobile} />
+          <canvas
+            ref={canvasRef}
+            width={isMobile ? window.innerWidth : DEFAULT_CANVAS_WIDTH}
+            height={DEFAULT_CANVAS_HEIGHT}
+            className="border border-gray-400"
           />
-          <div className="relative">
-            <canvas
-              ref={canvasRef}
-              width={isMobile ? window.innerWidth : 600}
-              height={400}
-              className="border border-gray-400"
-            />
-            <Trash
-              visible={showTrashBin}
-              cursorPosition={cursorPositionRef.current}
-              fabricCanvas={fabricCanvasRef.current}
-              onObjectDropped={() => {
-                setShowTrashBin(false);
-                isMovingRef.current = false;
-              }}
-            />
-          </div>
-          <div>
-            {objSelected && (
-              <div className="mt-4 space-x-2">
-                Seleccionado: {objSelected.type}
-              </div>
-            )}
-          </div>
-          <div className="mt-4 w-full flex flex-wrap justify-center items-center flex-row gap-4">
-            <button
-              className="bg-transparent w-fit h-fit rounded-full"
-              onClick={addRectangle}
-            >
-              Cuadrado 🟦
-            </button>
-            <button
-              className="bg-transparent w-fit h-fit rounded-full"
-              onClick={addText}
-            >
-              Texto ✏
-            </button>
-            <button
-              className="bg-transparent w-fit h-fit rounded-full"
-              onClick={() => inputFileRef.current?.click()}
-            >
-              Imagen 🖼
-            </button>
-            <button
-              className="bg-transparent w-fit h-fit rounded-full"
-              onClick={switchBackGroundColor}
-            >
-              Fondo 🌈
-            </button>
-            <button
-              className="bg-transparent w-fit h-fit rounded-full"
-              onClick={clearCanvas}
-            >
-              Limpiar 🧹
-            </button>
-          </div>
-        </>
+          <Trash
+            visible={showTrashBin}
+            cursorPosition={cursorPositionRef.current}
+            fabricCanvas={fabricCanvasRef.current}
+            onObjectDropped={() => {
+              setShowTrashBin(false);
+              isMovingRef.current = false;
+            }}
+          />
+        </div>
       )}
     </div>
   );
