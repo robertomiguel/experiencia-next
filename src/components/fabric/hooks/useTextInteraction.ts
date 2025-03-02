@@ -16,42 +16,35 @@ export const useTextInteraction = (fabricCanvasRef: RefObject<any>) => {
       }
     };
 
-    // Mejorar la interacción con textos existentes
-    const handleTextCreated = (objects: any) => {
-      objects.forEach((obj: any) => {
-        if (obj.type === "textbox") {
-          // Desactiva el pixel-perfect para textos
-          obj.perPixelTargetFind = false;
+    // Configuración mínima para textboxes - SIN ESTILOS
+    const configureTextbox = (textbox: any) => {
+      if (!textbox || textbox.type !== "textbox") return;
 
-          // Mejorar la apariencia en edición
-          obj.borderColor = "rgba(0,0,255,0.5)";
-          obj.editingBorderColor = "rgba(0,0,255,0.8)";
-          obj.cornerColor = "rgba(0,0,255,0.5)";
-          obj.transparentCorners = false;
-          obj.padding = 10;
+      // Sólo configuramos la detección de clics y visibilidad de controles
+      // NO aplicamos ningún estilo de color o apariencia
+      textbox.perPixelTargetFind = false;
 
-          // Asegurar que tenga controles visibles
-          obj.setControlsVisibility({
-            mtr: true,
-            tl: true,
-            tr: true,
-            bl: true,
-            br: true,
-          });
-        }
+      textbox.setControlsVisibility({
+        mtr: true,
+        tl: true,
+        tr: true,
+        bl: true,
+        br: true,
       });
     };
 
     // Registrar eventos
     currentCanvas.on("mouse:dblclick", handleDblClick);
 
-    // Para textos que ya existan o se agreguen en el futuro
-    const existingObjects = currentCanvas.getObjects();
-    handleTextCreated(existingObjects);
+    // Para textos existentes
+    currentCanvas.getObjects().forEach((obj: any) => {
+      if (obj.type === "textbox") configureTextbox(obj);
+    });
 
+    // Para textos nuevos
     currentCanvas.on("object:added", (e: any) => {
       if (e.target && e.target.type === "textbox") {
-        handleTextCreated([e.target]);
+        configureTextbox(e.target);
       }
     });
 
