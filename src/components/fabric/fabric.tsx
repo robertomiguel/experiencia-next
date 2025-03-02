@@ -2,36 +2,20 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useFabricScript } from "./hooks/useFabricScript";
+import Trash from "./trash";
 
 export const Fabric = ({ isMobile }: { isMobile: boolean }) => {
   const [objSelected, setObjSelected] = useState<any>(null);
   const [showTrashBin, setShowTrashBin] = useState(false);
-  const [isOverTrashBin, setIsOverTrashBin] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const inputFileRef = useRef<HTMLInputElement>(null);
   const fabricCanvasRef = useRef<any>(null);
-  const trashBinRef = useRef<HTMLDivElement>(null);
   const isMovingRef = useRef(false);
 
   const isFabricLoaded = useFabricScript();
 
   const cursorPositionRef = useRef({ x: 0, y: 0 });
-
-  const isCursorOverTrashBin = useCallback(() => {
-    if (!trashBinRef.current) return false;
-
-    const trashBin = trashBinRef.current.getBoundingClientRect();
-    const cursorX = cursorPositionRef.current.x;
-    const cursorY = cursorPositionRef.current.y;
-
-    return (
-      cursorX >= trashBin.left &&
-      cursorX <= trashBin.right &&
-      cursorY >= trashBin.top &&
-      cursorY <= trashBin.bottom
-    );
-  }, []);
 
   useEffect(() => {
     if (!isFabricLoaded || !canvasRef.current || fabricCanvasRef.current)
@@ -76,32 +60,6 @@ export const Fabric = ({ isMobile }: { isMobile: boolean }) => {
 
           // Guardar la posición actual
           cursorPositionRef.current = { x: clientX, y: clientY };
-
-          // Verificar si el cursor está sobre el tacho
-          const isOver = isCursorOverTrashBin();
-          setIsOverTrashBin(isOver);
-        }
-      });
-
-      fabricCanvasRef.current.on("object:modified", (e: any) => {
-        if (isMovingRef.current) {
-          // Check if cursor is over trash bin when object is dropped
-          if (e.target && isCursorOverTrashBin()) {
-            // Animar el tacho brevemente antes de eliminar
-            setIsOverTrashBin(true);
-            setTimeout(() => {
-              fabricCanvasRef.current.remove(e.target);
-              fabricCanvasRef.current.discardActiveObject();
-              fabricCanvasRef.current.requestRenderAll();
-              setShowTrashBin(false);
-              setIsOverTrashBin(false);
-              isMovingRef.current = false;
-            }, 200);
-          } else {
-            setShowTrashBin(false);
-            setIsOverTrashBin(false);
-            isMovingRef.current = false;
-          }
         }
       });
     }
@@ -326,30 +284,15 @@ export const Fabric = ({ isMobile }: { isMobile: boolean }) => {
               height={400}
               className="border border-gray-400"
             />
-            {showTrashBin && (
-              <div
-                ref={trashBinRef}
-                className={`border-1 border-white absolute cursor-pointer bottom-4 left-1/2 transform -translate-x-1/2 w-20 h-20 flex items-center justify-center rounded-full ${
-                  isOverTrashBin
-                    ? "bg-[rgba(255,0,0,0.5)] scale-110"
-                    : "bg-[rgba(0,0,0,0.2)]"
-                } transition-all duration-200 shadow-lg z-50`}
-                data-testid="trash-bin"
-              >
-                <span
-                  className="text-4xl cursor-pointer"
-                  style={{
-                    fontSize: isOverTrashBin ? "2.75rem" : "2.25rem",
-                    transition: "all 0.2s ease",
-                    filter: isOverTrashBin
-                      ? "drop-shadow(0 0 3px rgba(255,255,255,0.8))"
-                      : "none",
-                  }}
-                >
-                  🗑️
-                </span>
-              </div>
-            )}
+            <Trash
+              visible={showTrashBin}
+              cursorPosition={cursorPositionRef.current}
+              fabricCanvas={fabricCanvasRef.current}
+              onObjectDropped={() => {
+                setShowTrashBin(false);
+                isMovingRef.current = false;
+              }}
+            />
           </div>
           <div>
             {objSelected && (
