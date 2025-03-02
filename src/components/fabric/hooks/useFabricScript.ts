@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState, useRef } from "react";
 
 const FABRIC_JS_CDN = "/fabric_with_gestures.js";
