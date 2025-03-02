@@ -7,6 +7,7 @@ export const useFabricCanvas = () => {
   const fabricCanvasRef = useRef<any>(null);
   const isFabricLoaded = useFabricScript();
 
+  // En useFabricCanvas.ts, después de crear el canvas:
   useEffect(() => {
     if (!isFabricLoaded || !canvasRef.current || fabricCanvasRef.current)
       return;
@@ -25,19 +26,36 @@ export const useFabricCanvas = () => {
         stopContextMenu: true,
       });
 
-      // Establecer estilos de control globales
+      // IMPORTANTE: Establecer estos estilos para todos los objetos
+      // INCLUIDOS los textbox
       fabric.Object.prototype.set({
-        transparentCorners: false,
-        borderColor: "rgba(0,0,255,0.5)",
-        cornerColor: "rgba(0,0,255,0.5)",
-        cornerSize: 10,
-        padding: 5,
-        cornerStyle: "circle",
+        // Configuración para bordes
+        borderColor: "#2196F3", // Azul visible
+        borderDashArray: [5, 5], // Borde punteado para mejor visibilidad
+        borderScaleFactor: 1.5, // Borde más ancho
+
+        // Configuración para esquinas
+        cornerColor: "#FFFFFF", // Esquinas blancas
+        cornerStrokeColor: "#1565C0", // Borde azul oscuro para contraste
+        cornerSize: 10, // Tamaño adecuado
+        cornerStyle: "circle", // Forma circular
+        cornerStrokeWidth: 1.5, // Borde de las esquinas
+        transparentCorners: false, // Esquinas sólidas
+
+        // Otras configuraciones
+        padding: 2, // Espacio para facilitar selección
+        rotatingPointOffset: 25, // Mejor separación del control de rotación
       });
 
-      // render inicial
-      fabricCanvasRef.current.renderAll();
+      // Para textbox específicamente
+      if (fabric.Textbox && fabric.Textbox.prototype) {
+        fabric.Textbox.prototype.set({
+          editingBorderColor: "#2196F3", // Mismo color que borderColor
+        });
+      }
 
+      // Asegúrate de hacer el render inicial
+      fabricCanvasRef.current.renderAll();
     }
 
     return () => {

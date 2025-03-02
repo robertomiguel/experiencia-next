@@ -39,6 +39,7 @@ export const useFabricObjects = (
     const fabric = (window as any).fabric;
     if (!fabric) return;
 
+    // Crear textbox con configuración mínima y solo propiedades necesarias
     const text = new fabric.Textbox("Hello, Fabric.js!", {
       left: 200,
       top: 200,
@@ -47,20 +48,11 @@ export const useFabricObjects = (
       selectable: true,
       originX: "center",
       originY: "center",
-      transparentCorners: false,
-      cornerColor: "rgba(0,0,255,0.5)",
-      cornerSize: 10,
-      padding: 10,
-      borderColor: "rgba(0,0,255,0.5)",
-      editingBorderColor: "rgba(0,0,255,0.8)",
-      lockUniScaling: false,
-      // Mejora la detección de clic para textos
       perPixelTargetFind: false,
-      // Hacer que la caja del texto sea más grande para facilitar la selección
-      strokeWidth: 0,
-      hasControls: true,
+      // NO añadir propiedades de estilo aquí
     });
 
+    // Sólo configurar visibilidad de controles
     text.setControlsVisibility({
       mtr: !isMobile,
       tl: true,
@@ -72,7 +64,8 @@ export const useFabricObjects = (
     fabricCanvasRef.current.add(text);
     fabricCanvasRef.current.setActiveObject(text);
 
-    text.enterEditing();
+    // Activar modo de edición inmediata
+    // text.enterEditing();
 
     fabricCanvasRef.current.renderAll();
   }, [fabricCanvasRef]);
