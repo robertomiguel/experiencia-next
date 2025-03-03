@@ -8,7 +8,8 @@ export const MainMenu = () => {
     { label: "Image", href: "/image" },
     { label: "Editor", href: "/editor" },
     { label: "Paint", href: "/paint" },
-    { label: "Fabric.JS", href: "/fabric" },
+    { label: "Fabric", href: "/fabric" },
+    { label: "Sound", href: "/sound" },
   ];
   return (
     <nav className="flex z-20 text-gray-50 bg-blue-800 p-2 pl-4 pr-4 m-3 rounded-full gap-3 sticky top-0 overflow-x-auto ">
