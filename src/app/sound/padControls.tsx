@@ -28,12 +28,12 @@ export const PadControls: FC<PadControlsProps> = memo(
       <div className="relative">
         <div
           onClick={() => setShow((prev) => !prev)}
-          className="p-2"
+          className="p-2 cursor-pointer"
         >
-          {show ? <CircleArrowUp /> : <CircleArrowDown />}
+          {show ? <CircleArrowUp color="#c1a394" /> : <CircleArrowDown color="#d3855d" />}
         </div>
         {show && (
-          <div className="absolute mt-2 bg-gray-800 p-2 rounded w-[300px] z-10 border-2 border-gray-400 shadow-lg ">
+          <div className="absolute mt-2 bg-gray-800 p-2 rounded-lg w-[200px] z-10 border-2 border-gray-400 shadow-lg ">
             {controlKeys.length === 0 ? (
               <p className="text-xs text-gray-400">No tiene controles</p>
             ) : (

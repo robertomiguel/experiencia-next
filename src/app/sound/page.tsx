@@ -268,10 +268,10 @@ export default function Sound() {
   );
 
   const padRowProps = useMemo(() => {
-    return pads.map(({ name, label }) => {
+    return pads.map(({ name, label, playKey }) => {
       const pd = padStatesForUI[name];
       return {
-        key: name,
+        playKey,
         padName: name,
         label,
         enabled: pd.enabled,
@@ -304,7 +304,7 @@ export default function Sound() {
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4">
       <h1 className="text-2xl font-bold mb-4 text-[#d3855d]">
-        Roland TR 808 - Audio Project
+        Roland TR 808 - Web Api Sound Sequencer - audioContext
       </h1>
 
       <div className="flex justify-center mb-6">
@@ -326,11 +326,11 @@ export default function Sound() {
         />
       </div>
 
-      <p className="text-center mb-6 text-[#d3855d]">
+      <p className="text-center mb-6 text-[#d3855d] hidden md:block">
         Pulsa [1-9, 0, -] para disparar sonidos manualmente.
       </p>
 
-      <div className="max-w-4xl mx-auto">
+      <div className="w-fit mx-auto flex flex-col md:gap-2 gap-8">
         {padRowProps.map((props) => (
           <div key={props.padName} data-pad={props.padName}>
             <PadRow {...props} key={props.padName} />
@@ -338,5 +338,5 @@ export default function Sound() {
         ))}
       </div>
     </div>
-  );
+  )
 }
