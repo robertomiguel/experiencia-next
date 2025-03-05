@@ -81,12 +81,7 @@ export const ArtForm = () => {
             if (!prompt.trim()) return;
             setIsLoading(true);
             try {
-              await Promise.all([
-                handleSubmit(),
-                handleSubmit(),
-                handleSubmit(),
-                handleSubmit(),
-              ]);
+              await Promise.all([handleSubmit()]);
             } finally {
               setIsLoading(false);
             }
@@ -101,12 +96,7 @@ export const ArtForm = () => {
             if (!prompt.trim()) return;
             setIsLoading(true);
             try {
-              await Promise.all([
-                handleSubmit2(),
-                handleSubmit2(),
-                handleSubmit2(),
-                handleSubmit2(),
-              ]);
+              await Promise.all([handleSubmit2()]);
             } finally {
               setIsLoading(false);
             }

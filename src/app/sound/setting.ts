@@ -29,17 +29,17 @@ export const keyMap: Record<string, string> = {
 };
 
 export const pads = [
-  { name: "kick", label: "KICK (1)" },
-  { name: "snare", label: "SNARE (2)" },
-  { name: "hihat", label: "HI-HAT (3)" },
-  { name: "openhat", label: "OPEN HAT (4)" },
-  { name: "clap", label: "CLAP (5)" },
-  { name: "tom", label: "TOM (6)" },
-  { name: "crash", label: "CRASH (7)" },
-  { name: "cowbell", label: "COWBELL (8)" },
-  { name: "rimshot", label: "RIMSHOT (9)" },
-  { name: "clave", label: "CLAVE (0)" },
-  { name: "maracas", label: "MARACAS (-)" },
+  { name: "kick", label: "KICK (1)", playKey: "1" },
+  { name: "snare", label: "SNARE (2)", playKey: "2" },
+  { name: "hihat", label: "HI-HAT (3)", playKey: "3" },
+  { name: "openhat", label: "OPEN HAT (4)", playKey: "4" },
+  { name: "clap", label: "CLAP (5)", playKey: "5" },
+  { name: "tom", label: "TOM (6)", playKey: "6" },
+  { name: "crash", label: "CRASH (7)", playKey: "7" },
+  { name: "cowbell", label: "COWBELL (8)", playKey: "8" },
+  { name: "rimshot", label: "RIMSHOT (9)", playKey: "9" },
+  { name: "clave", label: "CLAVE (0)", playKey: "0" },
+  { name: "maracas", label: "MARACAS (-)", playKey: "-" },
 ];
 
 export const SAMPLE_ROLAND_TR_808: Record<string, SampleData> = {

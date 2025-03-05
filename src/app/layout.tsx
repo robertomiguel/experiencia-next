@@ -24,7 +24,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <MainMenu />
         {children}
-        <div className="fixed right-2 p-2 bottom-0 bg-gray-700 bg-opacity-50 rounded-full underline ">
+        <div className="fixed text-blue-300 right-2 p-2 bottom-0 bg-gray-700 bg-opacity-50 rounded-full underline ">
           <a
             href="https://www.linkedin.com/in/roberto-miguel-costi-b1450292/"
             target="_blank"

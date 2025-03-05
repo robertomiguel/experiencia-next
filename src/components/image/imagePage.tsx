@@ -139,7 +139,7 @@ export default function ImagePage() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 px-2 md:px-8 w-full">
-      <h1 className="text-[20px] font-bold">Eliminar fondo de imagen</h1>
+      <h1 className="text-[20px] text-blue-300 font-bold">Eliminar fondo de imagen</h1>
 
       <div className="w-full bg-blue-800 p-2 md:p-4 rounded-lg shadow-md">
         <FileBox onChange={handleUpload} />

@@ -2,7 +2,7 @@ import { FC, memo } from "react";
 import { StepButtonProps } from "./types";
 
 export const StepButton: FC<StepButtonProps> = memo(
-  ({ stepIndex, isActive, isCurrent, onClick }) => {
+  ({ stepIndex, isActive, onClick }) => {
     const group = Math.floor(stepIndex / 4); // 0..3
     const groupColors = [
       "border-[#e56655]", // group 0: steps 0..3

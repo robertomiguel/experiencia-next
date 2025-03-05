@@ -14,11 +14,20 @@ const list = [
   "Next.js",
   "Responsive design",
   "Zustand",
+  "Fabric.js",
+  "Web Audio Api",
 ];
 
-export const NextjsXP = () => {
+export const NextjsXP = ({ routes }: { routes: string[] }) => {
   return (
     <div className="flex flex-col gap-10 justify-center items-center">
+      <div className="bg-blue-200 text-blue-700 font-bold p-2 flex flex-row gap-4 flex-wrap rounded-lg capitalize">
+        {routes.map((route) => (
+          <Link key={route} href={`/${route}`}>
+            {route}
+          </Link>
+        ))}
+      </div>
       <div className={style.container}>
         <h4>Experiencia Next.js</h4>
         <div className={style.listContainer}>
