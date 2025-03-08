@@ -21,6 +21,8 @@ const list = [
 ];
 
 export const NextjsXP = ({ routes }: { routes: string[] }) => {
+  console.log('rerender NextjsXP');
+  
   return (
     <Suspense fallback={<div>Cargando...</div>}>
       <div className="flex flex-col gap-10 justify-center items-center">
