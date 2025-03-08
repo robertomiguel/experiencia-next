@@ -27,9 +27,9 @@ export const useBitcoinPrice = (): { isLoading: boolean } => {
     // Usar el endpoint @ticker para actualizaciones menos frecuentes
     const socket = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@ticker');
     
-    socket.onopen = () => {
+    /* socket.onopen = () => {
       console.log('Conexión WebSocket establecida');
-    };
+    }; */
 
     socket.onmessage = (event: MessageEvent) => {
       const data: any = JSON.parse(event.data);
@@ -39,9 +39,9 @@ export const useBitcoinPrice = (): { isLoading: boolean } => {
       }
     };
 
-    socket.onerror = (error: Event) => {
+    /* socket.onerror = (error: Event) => {
       console.log('Error en WebSocket:', error);
-    };
+    }; */
 
     // Limpiar WebSocket al desmontar
     return () => {
