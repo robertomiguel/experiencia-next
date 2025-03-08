@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+'use server'
 import { cookies } from 'next/headers'
 import { LinkAction } from './LinkAction'
 import Link from 'next/link'
@@ -12,18 +13,23 @@ export const MainMenu = async () => {
   let user = null
 
   if (token) {
-    const decodedToken = await admin.auth().verifyIdToken(token)
-    if (
-      decodedToken.aud == process.env.FIREBASE_PROJECT_ID ||
-      decodedToken.iss ==
-        `https://securetoken.google.com/${process.env.FIREBASE_PROJECT_ID}`
-    ) {
-      user = decodedToken
+    try {
+      const decodedToken = await admin.auth().verifyIdToken(token)
+      if (
+        decodedToken.aud == process.env.FIREBASE_PROJECT_ID ||
+        decodedToken.iss ==
+          `https://securetoken.google.com/${process.env.FIREBASE_PROJECT_ID}`
+      ) {
+        user = decodedToken
+      }
+    } catch (error) {
+      console.log('Error verifying Firebase token:', error)
+      // No establecemos el usuario si hay un error
     }
   }
 
   return (
-    <nav className="flex justify-between z-20 text-gray-50 bg-blue-800 p-2 pl-4 pr-4 m-3 rounded-full gap-3 sticky top-0 overflow-x-auto ">
+    <nav className="flex justify-between z-20 text-gray-50 bg-blue-800 p-2 pl-4 pr-4 m-3 rounded-full gap-3 sticky top-0 overflow-x-auto">
       {menuItems.map((item) => (
         <LinkAction key={item.href} label={item.label} href={item.href} />
       ))}
@@ -37,8 +43,8 @@ export const MainMenu = async () => {
       {user && (
         <Link href="/login">
           <img
-            src={user.picture}
-            alt={user.name}
+            src={user?.picture || '/default-avatar.png'}
+            alt={user?.name || 'User'}
             className="max-h-[30px] rounded-full"
           />
         </Link>
