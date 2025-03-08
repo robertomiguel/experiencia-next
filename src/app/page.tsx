@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 import { NextjsXP } from "@/components/home/NextjsXP";
 
-export default function Home() {
+export default async function Home() {
   const appDir = path.join(process.cwd(), "./src/app"); // Ruta de la carpeta app
   const folders = fs.readdirSync(appDir).filter((name) => {
     const fullPath = path.join(appDir, name);
