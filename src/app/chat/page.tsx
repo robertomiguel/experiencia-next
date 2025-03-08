@@ -2,6 +2,8 @@
 'use client';
 
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const Chat = () => {
   const [apiKey, setApiKey] = useState('');
@@ -16,7 +18,7 @@ const Chat = () => {
     if (!input.trim() || !apiKey.trim()) return;
     setError(null);
     const newMessage = { role: 'user', content: input };
-    const updatedMessages: any = [...messages, newMessage];
+    const updatedMessages = [...messages, newMessage];
     setMessages(updatedMessages);
     setInput('');
     setLoading(true);
@@ -86,6 +88,21 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, imageUrl]);
 
+  const renderMessageContent = (content: string) => {
+    const parts = content.split(/(```[a-zA-Z]*\n?|```)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith('```')) return null;
+      if (parts[index - 1]?.startsWith('```')) {
+        return (
+          <SyntaxHighlighter key={index} language="javascript" style={atomDark}>
+            {part.trim()}
+          </SyntaxHighlighter>
+        );
+      }
+      return <p key={index}>{part}</p>;
+    });
+  };
+
   return (
     <div className="flex flex-col max-w-xl mx-auto p-4 border rounded-lg shadow-lg h-[80vh]">
       <input
@@ -97,28 +114,28 @@ const Chat = () => {
       />
       <div className="flex-1 overflow-y-auto border p-2 rounded bg-gray-50">
         {messages.map((msg, index) => (
-          <div key={index} className={`mb-2 p-2 rounded ${msg.role === 'user' ? 'bg-blue-200' : 'bg-gray-200'}`}>{msg.content}</div>
+          <div key={index} className={`mb-2 p-2 rounded ${msg.role === 'user' ? 'bg-blue-200' : 'bg-gray-200'}`}>
+            {renderMessageContent(msg.content)}
+          </div>
         ))}
         {imageUrl && <img src={imageUrl} alt="Generated" className="mt-2 mx-auto" />}
         {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         <div ref={messagesEndRef} />
       </div>
-      <div className="mt-2 flex gap-2 flex-col">
+      <div className="mt-2 flex gap-2">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="flex-1 p-2 border rounded w-full"
+          className="flex-1 p-2 border rounded"
           placeholder="Escribe un mensaje o descripción de imagen..."
         />
-        <div className='flex flex-row gap-4' >
-          <button onClick={sendMessage} className="p-2 bg-blue-500 text-white rounded" disabled={loading}>
-            {loading ? 'Enviando...' : 'Enviar'}
-          </button>
-          <button onClick={generateImage} className="p-2 bg-green-500 text-white rounded" disabled={loading}>
-            {loading ? 'Generando...' : 'Imagen'}
-          </button>
-        </div>
+        <button onClick={sendMessage} className="p-2 bg-blue-500 text-white rounded" disabled={loading}>
+          {loading ? 'Enviando...' : 'Enviar'}
+        </button>
+        <button onClick={generateImage} className="p-2 bg-green-500 text-white rounded" disabled={loading}>
+          {loading ? 'Generando...' : 'Imagen'}
+        </button>
       </div>
     </div>
   );
