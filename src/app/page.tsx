@@ -9,7 +9,8 @@ export default function Home() {
     return (
       fs.statSync(fullPath).isDirectory() &&
       !name.startsWith("(") &&
-      !name.startsWith("_")
+      !name.startsWith("_") &&
+      !name.startsWith("api")
     ); // Excluir carpetas con paréntesis (grupos)
   });
 

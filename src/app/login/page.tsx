@@ -1,76 +1,43 @@
-/* eslint-disable @next/next/no-img-element */
-'use client'
+'use server';
 
-import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
-import { useState, useEffect, useCallback } from "react";
+import { cookies } from 'next/headers';
+import admin from '@/lib/firebaseAdmin';
+import ClientComponent from './login';
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAiEqVkK3a0R-ZYfylLFyXAayA-WIe2YwM",
-    authDomain: "experiencia-next.firebaseapp.com",
-    projectId: "experiencia-next",
-    storageBucket: "experiencia-next.firebasestorage.app",
-    messagingSenderId: "552760815957",
-    appId: "1:552760815957:web:eba6f666c823fa9fe47fdc"
-  };
+const Page = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('firebaseToken')?.value;
+  let user = null;
 
-initializeApp(firebaseConfig);
-const auth = getAuth();
-const provider = new GoogleAuthProvider();
-
-const LoginButton = ({ onClick }: { onClick: () => void }) => (
-  <button onClick={onClick} className="px-4 py-2 bg-blue-500 text-white rounded-xl">
-    Iniciar sesión con Google
-  </button>
-);
-
-const LogoutButton = ({ onClick }: { onClick: () => void }) => (
-  <button onClick={onClick} className="px-4 py-2 bg-red-500 text-white rounded-xl">
-    Cerrar sesión
-  </button>
-);
-
-const Page = () => {
-  const [user, setUser] = useState(auth.currentUser);
-
-  console.log('rerender: ', user);
-  
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(setUser);
-    return () => unsubscribe();
-  }, []);
-
-  const handleLogin = useCallback(async () => {
+  if (token) {
     try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error("Error al iniciar sesión", error);
-    }
-  }, []);
+      const decodedToken = await admin.auth().verifyIdToken(token);
 
-  const handleLogout = useCallback(async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Error al cerrar sesión", error);
-    }
-  }, []);
+      // Validar que el token pertenece a tu proyecto Firebase
+      if (
+        decodedToken.aud !== process.env.FIREBASE_PROJECT_ID ||
+        decodedToken.iss !== `https://securetoken.google.com/${process.env.FIREBASE_PROJECT_ID}`
+      ) {
+        throw new Error('Token no válido para este proyecto.');
+      }
 
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-4 p-6">
-      {user ? (
-        <>
-          <img src={user.photoURL || ""} alt="Perfil" className="w-20 h-20 rounded-full" />
-          <p className="text-lg font-semibold">{user.displayName}</p>
-          <p className="text-lg font-semibold">{user.email}</p>
-          <LogoutButton onClick={handleLogout} />
-        </>
-      ) : (
-        <LoginButton onClick={handleLogin} />
-      )}
-    </div>
-  );
+      // Validar que el email está verificado
+      if (!decodedToken.email_verified) {
+        throw new Error('Email no verificado.');
+      }
+
+      // Opcional: Restringir solo a ciertos dominios
+      if (!decodedToken.email?.endsWith('@gmail.com')) {
+        throw new Error('Dominio no autorizado.');
+      }
+
+      user = decodedToken;
+    } catch (error) {
+      console.error("Token inválido o acceso denegado", error);
+    }
+  }
+
+  return <ClientComponent user={user} />;
 };
 
 export default Page;
