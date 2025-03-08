@@ -1,3 +1,4 @@
+'use client'
 import { INITIAL_USD_BALANCE, useCoinStore } from "@/store/useCoinStore";
 import { buyAction, sellAction } from "./actions";
 

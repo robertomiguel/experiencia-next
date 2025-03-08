@@ -1,3 +1,4 @@
+'use server'
 import path from "path";
 import fs from "fs";
 import { NextjsXP } from "@/components/home/NextjsXP";
