@@ -6,7 +6,6 @@ export default async function Home() {
   const folders = [
     'coin',
     'editor',
-    'login',
     'paint',
     'arcade',
     'cripto',
@@ -15,7 +14,6 @@ export default async function Home() {
     'notif',
     'piano',
     'simon',
-    'chat',
     'dj',
     'pong',
     'sound'
